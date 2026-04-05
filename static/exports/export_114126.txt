@@ -1,0 +1,1 @@
+{'COP': 3.586, 'compressor_power': 2.789, 'compressor_work': 40.84, 'cooling_capacity': 10, 'heat_rejected': 187.3, 'mass_flow_rate': 0.06828, 'refrigeration_effect': 146.46, 'volumetric_efficiency': 85}

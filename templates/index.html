@@ -1,0 +1,2382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Virtual Refrigeration System Simulator</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Icons & Charts -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary-color: #1a73e8;
+            --secondary-color: #0d47a1;
+            --accent-color: #00bcd4;
+            --light-color: #f5f7fa;
+            --dark-color: #2c3e50;
+            --success-color: #4caf50;
+            --warning-color: #ff9800;
+            --danger-color: #f44336;
+            --gray-color: #7f8c8d;
+            --border-radius: 8px;
+            --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        body {
+            background-color: #f0f2f5;
+            color: var(--dark-color);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header & Navigation */
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 1.5rem 0;
+            box-shadow: var(--box-shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo i {
+            font-size: 2.5rem;
+            color: var(--accent-color);
+        }
+
+        .logo h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        .logo span {
+            color: var(--accent-color);
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 25px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            padding: 8px 15px;
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+            white-space: nowrap;
+        }
+
+        nav a:hover, nav a.active {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.6rem;
+            cursor: pointer;
+        }
+
+        /* Main Content */
+        main {
+            padding: 30px 0;
+            min-height: calc(100vh - 200px);
+        }
+
+        .page {
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to   { opacity: 1; }
+        }
+
+        .page-title {
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--primary-color);
+            color: var(--secondary-color);
+        }
+
+        /* Home Page */
+        .hero {
+            background: linear-gradient(rgba(26, 115, 232, 0.9), rgba(13, 71, 161, 0.9)),
+                        url('https://images.unsplash.com/photo-1581094794329-c8112a89af12?auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            text-align: center;
+            padding: 80px 20px;
+            border-radius: var(--border-radius);
+            margin-bottom: 40px;
+        }
+
+        .hero h2 {
+            font-size: 2.6rem;
+            margin-bottom: 18px;
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+            max-width: 800px;
+            margin: 0 auto 28px;
+        }
+
+        .btn {
+            display: inline-block;
+            background-color: var(--accent-color);
+            color: white;
+            padding: 10px 24px;
+            border-radius: var(--border-radius);
+            text-decoration: none;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            font-size: 0.95rem;
+        }
+
+        .btn:hover {
+            background-color: #0097a7;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+
+        .feature-card {
+            background-color: white;
+            padding: 22px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            transition: var(--transition);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+        }
+
+        .feature-card i {
+            font-size: 2.2rem;
+            color: var(--primary-color);
+            margin-bottom: 12px;
+        }
+
+        .feature-card h3 {
+            margin-bottom: 10px;
+            color: var(--secondary-color);
+        }
+
+        /* Simulation Page */
+        .simulation-container {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 30px;
+        }
+
+        .control-panel {
+            background-color: white;
+            padding: 22px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+        }
+
+        .control-section {
+            margin-bottom: 22px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .control-section:last-child {
+            border-bottom: none;
+        }
+
+        .control-section h3 {
+            margin-bottom: 12px;
+            color: var(--secondary-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1.05rem;
+        }
+
+        .control-section h3 i {
+            color: var(--primary-color);
+        }
+
+        .input-group {
+            margin-bottom: 12px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+            color: var(--dark-color);
+            font-size: 0.92rem;
+        }
+
+        .slider-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .slider-container input[type="range"] {
+            flex: 1;
+        }
+
+        .slider-value {
+            min-width: 60px;
+            text-align: right;
+            font-weight: 600;
+            color: var(--primary-color);
+            font-size: 0.9rem;
+        }
+
+        select, input[type="number"] {
+            width: 100%;
+            padding: 8px 10px;
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius);
+            font-size: 0.95rem;
+            transition: var(--transition);
+        }
+
+        select:focus, input[type="number"]:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.18);
+        }
+
+        .simulation-visual {
+            background-color: white;
+            padding: 22px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .model-selector {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .model-btn {
+            padding: 8px 14px;
+            background-color: #eee;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: var(--transition);
+        }
+
+        .model-btn.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .system-diagram {
+            flex: 1;
+            position: relative;
+            min-height: 360px;
+            background-color: #f9f9f9;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            margin-bottom: 18px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .component {
+            position: absolute;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            transition: var(--transition);
+        }
+
+        .component-icon {
+            width: 68px;
+            height: 68px;
+            background-color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.7rem;
+            color: var(--primary-color);
+            box-shadow: var(--box-shadow);
+            margin-bottom: 6px;
+            border: 3px solid var(--primary-color);
+        }
+
+        .component-label {
+            font-weight: 600;
+            background-color: rgba(255, 255, 255, 0.92);
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.82rem;
+        }
+
+        .component-value {
+            font-size: 0.75rem;
+            color: var(--gray-color);
+            margin-top: 3px;
+            max-width: 160px;
+        }
+
+        .flow-arrow {
+            position: absolute;
+            color: var(--accent-color);
+            font-size: 1.4rem;
+            animation: flow 2s linear infinite;
+        }
+
+        @keyframes flow {
+            0%   { opacity: 0.5; }
+            50%  { opacity: 1; }
+            100% { opacity: 0.5; }
+        }
+
+        .flow-arrow.paused {
+            animation-play-state: paused;
+            opacity: 0.4;
+        }
+
+        .simulation-controls {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+
+        /* Charts */
+        .charts-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-top: 26px;
+        }
+
+        .chart-box {
+            background-color: white;
+            padding: 20px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+        }
+
+        .chart-box h3 {
+            margin-bottom: 14px;
+            color: var(--secondary-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1rem;
+        }
+
+        .chart-box h3 i {
+            color: var(--primary-color);
+        }
+
+        /* Results Table */
+        .results-container {
+            background-color: white;
+            padding: 22px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            margin-top: 26px;
+            overflow-x: auto;
+        }
+
+        .results-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            font-size: 0.9rem;
+        }
+
+        .results-table th, .results-table td {
+            padding: 8px 10px;
+            text-align: center;
+            border-bottom: 1px solid #eee;
+        }
+
+        .results-table th {
+            background-color: #f8f9fa;
+            font-weight: 700;
+            color: var(--secondary-color);
+        }
+
+        .results-table tr:hover {
+            background-color: #f9f9f9;
+        }
+
+        .performance-results h4 {
+            margin-top: 14px;
+            font-size: 1rem;
+        }
+
+        .export-options {
+            display: flex;
+            gap: 10px;
+            margin-top: 16px;
+            justify-content: flex-end;
+            flex-wrap: wrap;
+        }
+
+        /* Content cards (Theory, Experiments, About) */
+        .content-card {
+            background-color: white;
+            padding: 24px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            margin-bottom: 24px;
+        }
+
+        .content-card h2 {
+            color: var(--secondary-color);
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #eee;
+        }
+
+        .content-card h3 {
+            color: var(--primary-color);
+            margin: 20px 0 10px;
+        }
+
+        .content-card p {
+            margin-bottom: 10px;
+            font-size: 0.95rem;
+        }
+
+        .content-card ul, .content-card ol {
+            margin-left: 18px;
+            margin-bottom: 14px;
+            font-size: 0.94rem;
+        }
+
+        .content-card li {
+            margin-bottom: 6px;
+        }
+
+        .experiment-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 22px;
+            margin-top: 18px;
+        }
+
+        .experiment-card {
+            background-color: white;
+            padding: 20px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            border-top: 4px solid var(--primary-color);
+            transition: var(--transition);
+        }
+
+        .experiment-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.14);
+        }
+
+        .experiment-card h3 {
+            color: var(--secondary-color);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1rem;
+        }
+
+        .experiment-card h3 i {
+            color: var(--primary-color);
+        }
+
+        .experiment-card p {
+            margin-bottom: 12px;
+            color: var(--gray-color);
+            font-size: 0.9rem;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--dark-color);
+            color: white;
+            padding: 30px 0 18px;
+            margin-top: 40px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 24px;
+            margin-bottom: 18px;
+        }
+
+        .footer-section h3 {
+            margin-bottom: 12px;
+            color: var(--accent-color);
+            font-size: 1rem;
+        }
+
+        .footer-section p {
+            margin-bottom: 10px;
+            color: #ddd;
+            font-size: 0.9rem;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 6px;
+            font-size: 0.9rem;
+        }
+
+        .footer-section ul li a {
+            color: #ccc;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer-section ul li a:hover {
+            color: var(--accent-color);
+            padding-left: 3px;
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 12px;
+            border-top: 1px solid #444;
+            color: #aaa;
+            font-size: 0.85rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 1100px) {
+            .simulation-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: row;
+            }
+
+            nav {
+                position: absolute;
+                right: 0;
+                top: 58px;
+                background: rgba(13, 71, 161, 0.98);
+                width: 100%;
+                display: none;
+            }
+
+            nav.open {
+                display: block;
+            }
+
+            nav ul {
+                flex-direction: column;
+                gap: 6px;
+                padding: 10px 18px 12px;
+            }
+
+            nav a {
+                display: block;
+                text-align: left;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .hero h2 {
+                font-size: 2rem;
+            }
+
+            .hero p {
+                font-size: 0.95rem;
+            }
+
+            .charts-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Simulation 2 Styles */
+        #simulation2 .sim2-wrapper {
+            background-color: #f0f2f5;
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        #simulation2 .sim2-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        #simulation2 .sim2-header h1 {
+            color: #007bff;
+            margin-bottom: 5px;
+            font-size: 1.8rem;
+        }
+
+        #simulation2 .sim2-subtitle {
+            color: #6c757d;
+            font-size: 1.1em;
+        }
+
+        #simulation2 .sim2-main {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+            width: 100%;
+        }
+
+        #simulation2 .sim2-panel {
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            padding: 20px;
+        }
+
+        #simulation2 #simulation-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #simulation2 #simulation-controls {
+            margin-bottom: 20px;
+        }
+
+        #simulation2 #simulation-controls button {
+            padding: 10px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 0 10px;
+            transition: background-color 0.3s, transform 0.1s;
+        }
+
+        #simulation2 #simulation-controls button:active {
+            transform: scale(0.98);
+        }
+
+        #simulation2 #start-btn {
+            background-color: #28a745;
+            color: white;
+        }
+
+        #simulation2 #start-btn:hover:not(:disabled) {
+            background-color: #218838;
+        }
+
+        #simulation2 #stop-btn {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        #simulation2 #stop-btn:hover:not(:disabled) {
+            background-color: #c82333;
+        }
+
+        #simulation2 #simulation-controls button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        #simulation2 #controls-container h2, #simulation2 #info-container h2 {
+            margin-top: 0;
+            border-bottom: 2px solid #dee2e6;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            color: #212529;
+        }
+
+        #simulation2 .control-group {
+            margin-bottom: 20px;
+        }
+
+        #simulation2 .control-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #212529;
+        }
+
+        #simulation2 .control-group input[type="range"] {
+            width: 100%;
+            cursor: pointer;
+        }
+
+        #simulation2 .control-value {
+            float: right;
+            font-weight: normal;
+            color: #6c757d;
+        }
+
+        #simulation2 .state-point {
+            background-color: #f0f2f5;
+            border-left: 4px solid #007bff;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+        }
+
+        #simulation2 .state-point h3 {
+            margin-top: 0;
+            color: #212529;
+        }
+
+        #simulation2 .state-point p {
+            margin: 5px 0;
+            font-size: 0.9em;
+            color: #212529;
+        }
+
+        #simulation2 .state-point span {
+            font-weight: bold;
+            float: right;
+        }
+
+        @keyframes sim2-spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        #simulation2 .rotating {
+            animation: sim2-spin 2s linear infinite;
+            transform-origin: center;
+            animation-play-state: paused;
+        }
+
+        #simulation2 .refrigerant-particle {
+            fill: #007bff;
+            r: 4;
+        }
+
+        #simulation2 .pipe {
+            fill: none;
+            stroke-width: 8;
+            stroke-linecap: round;
+        }
+
+        #simulation2 .component-label {
+            font-size: 14px;
+            font-weight: bold;
+            fill: #212529;
+            text-anchor: middle;
+        }
+
+        #simulation2 .sim2-aside {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        @media (max-width: 992px) {
+            #simulation2 .sim2-main {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+<header>
+    <div class="container header-content">
+        <div class="logo">
+            <i class="fas fa-snowflake"></i>
+            <h1>Virtual <span>Refrigeration</span> Lab</h1>
+        </div>
+        <button class="mobile-menu-btn" id="mobileMenuBtn">
+            <i class="fas fa-bars"></i>
+        </button>
+        <nav id="mainNav">
+            <ul>
+                <li><a href="#home" class="nav-link active">Home</a></li>
+                <li><a href="#theory" class="nav-link">Theory</a></li>
+                <li><a href="#industrial" class="nav-link">Industrial Systems</a></li>
+                <li><a href="#simulation" class="nav-link">Simulation</a></li>
+                <li><a href="#experiments" class="nav-link">Experiments</a></li>
+                <li><a href="#results" class="nav-link">Results</a></li>
+                <!-- <li><a href="#simulation2" class="nav-link">Simulation 2</a></li> -->
+                <li><a href="#about" class="nav-link">About</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<main class="container">
+    <!-- Home -->
+    <section id="home" class="page active">
+        <div class="hero">
+            <h2>Virtual Refrigeration System Simulator</h2>
+            <p>An interactive virtual laboratory for studying and analyzing refrigeration cycles. 
+               Explore different configurations, adjust parameters, and visualize thermodynamic 
+               processes in real-time.</p>
+            <a href="#simulation" class="btn btn-primary start-simulation">Start Simulation</a>
+        </div>
+
+        <div class="features">
+            <div class="feature-card">
+                <i class="fas fa-cogs"></i>
+                <h3>Multiple Models</h3>
+                <p>Study single-stage, two-stage systems and compare different refrigerants with realistic 
+                   thermodynamic behavior.</p>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-sliders-h"></i>
+                <h3>Interactive Controls</h3>
+                <p>Adjust evaporator/condenser temperatures, superheating, subcooling, compressor efficiency,
+                   and cooling load in real-time.</p>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-chart-line"></i>
+                <h3>Dynamic Visualization</h3>
+                <p>Visualize the cycle on P-h and T-s diagrams with animated flow and state point annotation.</p>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-flask"></i>
+                <h3>Experiment Modules</h3>
+                <p>Pre-defined experiments to explore parameter effects and refrigerant comparisons.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Theory -->
+    <section id="theory" class="page">
+        <h2 class="page-title">Theory of Refrigeration Systems</h2>
+        <div class="content-card">
+            <h2>Introduction to Refrigeration</h2>
+            <p>Refrigeration is the process of removing heat from a space or substance to lower its temperature.
+               The vapor compression refrigeration cycle is the most common method used in domestic, 
+               commercial, and industrial systems.</p>
+
+            <h3>Vapor Compression Cycle</h3>
+            <p>The basic vapor compression refrigeration cycle consists of four main components:</p>
+            <ol>
+                <li><strong>Compressor:</strong> Raises the pressure and temperature of the refrigerant vapor.</li>
+                <li><strong>Condenser:</strong> Rejects heat to the surroundings, condensing vapor to liquid.</li>
+                <li><strong>Expansion Valve:</strong> Reduces the pressure of the liquid, producing a cold mixture.</li>
+                <li><strong>Evaporator:</strong> Absorbs heat from the refrigerated space, vaporizing the refrigerant.</li>
+            </ol>
+
+            <h3>Pressure-Enthalpy (P-h) Diagram</h3>
+            <p>The P-h diagram is a standard tool for refrigeration analysis. It shows pressure (log scale) against 
+               enthalpy and includes:</p>
+            <ul>
+                <li>Saturation dome (liquid–vapor region)</li>
+                <li>Constant temperature and entropy lines</li>
+                <li>Quality lines</li>
+            </ul>
+
+            <h3>Coefficient of Performance (COP)</h3>
+            <p>COP is the primary performance index:</p>
+            <p><strong>COP = Refrigeration Effect / Compressor Work</strong></p>
+
+            <h3>Superheating and Subcooling</h3>
+            <p><strong>Superheating:</strong> Heating saturated vapor above its saturation temperature at constant pressure.
+               Ensures dry vapor at compressor inlet.</p>
+            <p><strong>Subcooling:</strong> Cooling saturated liquid below saturation temperature, increasing refrigeration 
+               effect and reducing flash gas.</p>
+
+            <h3>Refrigerants and Environmental Impact</h3>
+            <p>Modern refrigerants are chosen based on thermodynamic performance, ODP, GWP, safety, and cost.
+               Examples: R134a, R22, R410A, R32, R600a, R290, etc.</p>
+        </div>
+    </section>
+
+    <!-- Industrial Systems -->
+    <section id="industrial" class="page">
+        <h2 class="page-title">Industrial Refrigeration Systems</h2>
+        <div class="content-card">
+            <h2>Overview of Industrial Applications</h2>
+            <p>Industrial refrigeration systems are used in various applications including food processing, 
+               chemical manufacturing, pharmaceutical storage, data centers, and large-scale cooling operations. 
+               These systems are designed for high efficiency, reliability, and continuous operation.</p>
+
+            <h3>Types of Industrial Refrigeration Systems</h3>
+            <ul>
+                <li><strong>Direct Expansion (DX) Systems:</strong> Refrigerant directly evaporates in the cooling coil. 
+                    Commonly used in small to medium-scale applications.</li>
+                <li><strong>Flooded Evaporator Systems:</strong> Refrigerant is stored in the evaporator shell. Used in large 
+                    industrial installations for improved heat transfer.</li>
+                <li><strong>Secondary Loop Systems:</strong> Uses a heat transfer fluid (brine or glycol) cooled by refrigerant. 
+                    Provides flexibility and safety in large facilities.</li>
+                <li><strong>Cascade Systems:</strong> Multiple refrigeration circuits operating at different pressure levels. 
+                    Used for ultra-low temperature applications.</li>
+                <li><strong>Screw Compressor Systems:</strong> High-capacity continuous-duty systems for large cooling loads. 
+                    Common in industrial applications.</li>
+            </ul>
+
+            <h3>Key Performance Indicators</h3>
+            <ul>
+                <li><strong>Cooling Capacity (kW):</strong> Total heat removal rate from the system</li>
+                <li><strong>Coefficient of Performance (COP):</strong> Efficiency ratio (Cooling Effect / Work Input)</li>
+                <li><strong>Power Consumption (kW):</strong> Electrical power required by compressors</li>
+                <li><strong>Compressor Displacement:</strong> Volume of refrigerant pumped per unit time</li>
+                <li><strong>Pressure Ratio:</strong> Ratio of discharge to suction pressures</li>
+            </ul>
+
+            <h3>System Optimization</h3>
+            <ul>
+                <li><strong>Energy Efficiency:</strong> Minimizing power consumption while meeting cooling demands through 
+                    proper evaporator/condenser sizing and control strategies</li>
+                <li><strong>Pressure Control:</strong> Maintaining optimal pressure ratios to balance capacity and efficiency</li>
+                <li><strong>Temperature Control:</strong> Precise setpoint management to prevent overshooting and energy waste</li>
+                <li><strong>Preventive Maintenance:</strong> Regular monitoring and maintenance to ensure long-term reliability</li>
+                <li><strong>Load Management:</strong> Variable capacity operation to match cooling demand throughout the day</li>
+            </ul>
+
+            <h3>Design Considerations</h3>
+            <ul>
+                <li>Heat load calculations based on ambient temperature, insulation, and product temperature requirements</li>
+                <li>Refrigerant selection based on performance, safety, environmental impact, and regulatory compliance</li>
+                <li>Compressor sizing for continuous operation with proper safety margins</li>
+                <li>Condenser and evaporator design for maximum heat transfer efficiency</li>
+                <li>Control systems for precise temperature and pressure regulation</li>
+                <li>Safety provisions including relief valves, isolation valves, and monitoring systems</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- Simulation -->
+    <section id="simulation" class="page">
+        <h2 class="page-title">Refrigeration Cycle Simulation</h2>
+
+        <div class="simulation-container">
+            <!-- Controls -->
+            <div class="control-panel">
+                <div class="control-section">
+                    <h3><i class="fas fa-sliders-h"></i> System Configuration</h3>
+                    <div class="input-group">
+                        <label for="refrigerant">Refrigerant</label>
+                        <select id="refrigerant">
+                            <!-- Will be filled from backend /refrigerants -->
+                        </select>
+                    </div>
+                    <div class="model-selector">
+                        <button class="model-btn active" data-model="single-stage">Single-Stage</button>
+                        <button class="model-btn" data-model="two-stage">Two-Stage</button>
+                        <button class="model-btn" data-model="comparison">Refrigerant Comparison</button>
+                    </div>
+                </div>
+
+                <div class="control-section">
+                    <h3><i class="fas fa-thermometer-half"></i> Temperature Settings</h3>
+                    <div class="input-group">
+                        <label for="evap-temp">
+                            Evaporator Temperature:
+                            <span id="evap-temp-value" class="slider-value">-10 °C</span>
+                        </label>
+                        <div class="slider-container">
+                            <input type="range" id="evap-temp" min="-30" max="10" value="-10" step="1">
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="cond-temp">
+                            Condenser Temperature:
+                            <span id="cond-temp-value" class="slider-value">40 °C</span>
+                        </label>
+                        <div class="slider-container">
+                            <input type="range" id="cond-temp" min="30" max="60" value="40" step="1">
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="superheat">Superheating (°C)</label>
+                        <input type="number" id="superheat" min="0" max="30" value="5" step="0.5">
+                    </div>
+                    <div class="input-group">
+                        <label for="subcool">Subcooling (°C)</label>
+                        <input type="number" id="subcool" min="0" max="20" value="5" step="0.5">
+                    </div>
+                </div>
+
+                <div class="control-section">
+                    <h3><i class="fas fa-tachometer-alt"></i> Performance Parameters</h3>
+                    <div class="input-group">
+                        <label for="comp-efficiency">Compressor Efficiency (%)</label>
+                        <input type="number" id="comp-efficiency" min="50" max="95" value="85" step="1">
+                    </div>
+                    <div class="input-group">
+                        <label for="cooling-load">Cooling Load (kW)</label>
+                        <input type="number" id="cooling-load" min="1" max="200" value="10" step="0.5">
+                    </div>
+                    <div class="input-group">
+                        <label for="mass-flow">Mass Flow Rate (kg/s) (calculated)</label>
+                        <input type="number" id="mass-flow" disabled>
+                    </div>
+                </div>
+
+                <button id="calculate-btn" class="btn btn-primary" style="width: 100%;">
+                    <i class="fas fa-calculator"></i> Calculate Cycle
+                </button>
+            </div>
+
+            <!-- Visual -->
+            <div class="simulation-visual">
+                <div class="system-diagram" id="systemDiagram">
+                    <!-- Will be built by JS -->
+                </div>
+                <div class="simulation-controls">
+                    <button id="start-btn" class="btn btn-primary">
+                        <i class="fas fa-play"></i> Start
+                    </button>
+                    <button id="pause-btn" class="btn">
+                        <i class="fas fa-pause"></i> Pause
+                    </button>
+                    <button id="reset-btn" class="btn">
+                        <i class="fas fa-redo"></i> Reset
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts -->
+        <div class="charts-container">
+            <div class="chart-box">
+                <h3><i class="fas fa-chart-area"></i> Pressure-Enthalpy (P-h) Diagram</h3>
+                <canvas id="ph-chart" height="220"></canvas>
+            </div>
+            <div class="chart-box">
+                <h3><i class="fas fa-chart-line"></i> Temperature-Entropy (T-s) Diagram</h3>
+                <canvas id="ts-chart" height="220"></canvas>
+            </div>
+        </div>
+
+        <!-- Results -->
+        <div class="results-container">
+            <h3><i class="fas fa-table"></i> Cycle State Points & Performance Results</h3>
+            <table class="results-table">
+                <thead>
+                <tr>
+                    <th>State</th>
+                    <th>Pressure (kPa)</th>
+                    <th>Temperature (°C)</th>
+                    <th>Enthalpy (kJ/kg)</th>
+                    <th>Entropy (kJ/kg·K)</th>
+                    <th>Quality</th>
+                </tr>
+                </thead>
+                <tbody id="results-body">
+                <!-- Filled by JS -->
+                </tbody>
+            </table>
+
+            <div class="performance-results">
+                <h4>Performance Parameters</h4>
+                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-top:10px;font-size:0.9rem;">
+                    <div><strong>COP:</strong> <span id="cop-value">-</span></div>
+                    <div><strong>Compressor Power:</strong> <span id="comp-work-value">-</span></div>
+                    <div><strong>Refrigeration Effect:</strong> <span id="ref-effect-value">-</span></div>
+                    <div><strong>Mass Flow Rate:</strong> <span id="mass-flow-value">-</span></div>
+                    <div><strong>Heat Rejected:</strong> <span id="heat-rejected-value">-</span></div>
+                    <div><strong>Volumetric Efficiency:</strong> <span id="vol-eff-value">-</span></div>
+                </div>
+            </div>
+
+            <div class="export-options">
+                <button id="export-csv" class="btn">
+                    <i class="fas fa-file-text"></i> Export Text
+                </button>
+                <button id="export-pdf" class="btn">
+                    <i class="fas fa-file-pdf"></i> Export PDF
+                </button>
+                <button id="screenshot" class="btn">
+                    <i class="fas fa-camera"></i> Screenshot
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- <!-- Simulation 2 -->
+    <section id="simulation2" class="page">
+        <div class="sim2-wrapper">
+            <div class="sim2-header">
+                <h1>Vapor-Compression Refrigeration System Simulator</h1>
+                <p class="sim2-subtitle">An interactive look at the thermodynamic cycle</p>
+            </div>
+
+            <div class="sim2-main">
+                <section id="simulation-container" class="sim2-panel">
+                    <div id="simulation-controls">
+                        <button id="start-btn">Start</button>
+                        <button id="stop-btn" disabled>Stop</button>
+                    </div>
+                    <svg id="refrigeration-svg" width="100%" height="500" viewBox="0 0 800 500">
+                        <!-- Define paths for particles to follow -->
+                        <defs>
+                            <path id="flow-path-1-2" d="M 200 400 L 200 200" />
+                            <path id="flow-path-2-3" d="M 200 200 L 600 200" />
+                            <path id="flow-path-3-4" d="M 600 200 L 600 400" />
+                            <path id="flow-path-4-1" d="M 600 400 L 200 400" />
+                        </defs>
+
+                        <!-- Pipes -->
+                        <path id="pipe-1-2" class="pipe" d="M 200 400 L 200 200" stroke="#007bff" />
+                        <path id="pipe-2-3" class="pipe" d="M 200 200 L 600 200" stroke="#dc3545" />
+                        <path id="pipe-3-4" class="pipe" d="M 600 200 L 600 400" stroke="#fd7e14" />
+                        <path id="pipe-4-1" class="pipe" d="M 600 400 L 200 400" stroke="#007bff" />
+                        
+                        <!-- Components -->
+                        <!-- Compressor -->
+                        <g id="compressor" transform="translate(200, 300)">
+                            <circle cx="0" cy="0" r="40" fill="#6c757d" stroke="#343a40" stroke-width="2"/>
+                            <path d="M -15,-15 L 15,0 L -15,15 Z" fill="white" class="rotating"/>
+                            <text y="60" class="component-label">Compressor</text>
+                        </g>
+
+                        <!-- Condenser -->
+                        <g id="condenser" transform="translate(400, 150)">
+                            <rect x="-100" y="-20" width="200" height="40" rx="5" fill="#6c757d" stroke="#343a40" stroke-width="2"/>
+                            <line x1="-80" y1="-10" x2="-80" y2="10" stroke="white" stroke-width="3"/>
+                            <line x1="-40" y1="-10" x2="-40" y2="10" stroke="white" stroke-width="3"/>
+                            <line x1="0" y1="-10" x2="0" y2="10" stroke="white" stroke-width="3"/>
+                            <line x1="40" y1="-10" x2="40" y2="10" stroke="white" stroke-width="3"/>
+                            <line x1="80" y1="-10" x2="80" y2="10" stroke="white" stroke-width="3"/>
+                            <text y="40" class="component-label">Condenser</text>
+                        </g>
+                        
+                        <!-- Expansion Valve -->
+                        <g id="expansion-valve" transform="translate(600, 300)">
+                            <path d="M -20,-15 L 20,0 L -20,15 Z" fill="#6c757d" stroke="#343a40" stroke-width="2"/>
+                            <text y="40" class="component-label">Expansion Valve</text>
+                        </g>
+
+                        <!-- Evaporator -->
+                        <g id="evaporator" transform="translate(400, 450)">
+                            <rect x="-100" y="-20" width="200" height="40" rx="5" fill="#6c757d" stroke="#343a40" stroke-width="2"/>
+                            <line x1="-80" y1="-10" x2="-80" y2="10" stroke="white" stroke-width="3"/>
+                            <line x1="-40" y1="-10" x2="-40" y2="10" stroke="white" stroke-width="3"/>
+                            <line x1="0" y1="-10" x2="0" y2="10" stroke="white" stroke-width="3"/>
+                            <line x1="40" y1="-10" x2="40" y2="10" stroke="white" stroke-width="3"/>
+                            <line x1="80" y1="-10" x2="80" y2="10" stroke="white" stroke-width="3"/>
+                            <text y="40" class="component-label">Evaporator</text>
+                        </g>
+
+                        <!-- State Point Labels -->
+                        <text x="170" y="420" font-size="20px" font-weight="bold" fill="black">1</text>
+                        <text x="170" y="180" font-size="20px" font-weight="bold" fill="black">2</text>
+                        <text x="630" y="180" font-size="20px" font-weight="bold" fill="black">3</text>
+                        <text x="630" y="420" font-size="20px" font-weight="bold" fill="black">4</text>
+                    </svg>
+                </section>
+
+                <aside class="sim2-aside">
+                    <section id="controls-container" class="sim2-panel">
+                        <h2>Compressor</h2>
+                        <div class="state-point">
+                            <h3>Function</h3>
+                            <p>Compresses the low-pressure refrigerant vapor from the evaporator to high pressure, raising its temperature significantly.</p>
+                            <h3>Key Parameters</h3>
+                            <p><strong>Inlet Pressure:</strong> <span id="comp-inlet-p">2.5 bar</span></p>
+                            <p><strong>Inlet Temperature:</strong> <span id="comp-inlet-t">-5°C</span></p>
+                            <p><strong>Outlet Pressure:</strong> <span id="comp-outlet-p">10.0 bar</span></p>
+                            <p><strong>Outlet Temperature:</strong> <span id="comp-outlet-t">75°C</span></p>
+                            <p><strong>Compression Ratio:</strong> <span id="comp-ratio">4.0</span></p>
+                        </div>
+                    </section>
+
+                    <section id="info-container" class="sim2-panel">
+                        <h2>Condenser</h2>
+                        <div class="state-point">
+                            <h3>Function</h3>
+                            <p>Rejects heat from the high-pressure refrigerant vapor to the surroundings, condensing it into liquid form.</p>
+                            <h3>Key Parameters</h3>
+                            <p><strong>Inlet Pressure:</strong> <span id="cond-inlet-p">10.0 bar</span></p>
+                            <p><strong>Inlet Temperature:</strong> <span id="cond-inlet-t">75°C</span></p>
+                            <p><strong>Outlet Pressure:</strong> <span id="cond-outlet-p">10.0 bar</span></p>
+                            <p><strong>Outlet Temperature:</strong> <span id="cond-outlet-t">35°C</span></p>
+                            <p><strong>Heat Rejected:</strong> <span id="cond-heat-rejected">-</span> kW</p>
+                        </div>
+                    </section>
+                </aside>
+
+                <aside class="sim2-aside">
+                    <section id="controls-container" class="sim2-panel">
+                        <h2>Expansion Valve</h2>
+                        <div class="state-point">
+                            <h3>Function</h3>
+                            <p>Reduces the pressure of the liquid refrigerant through an isenthalpic process, creating a cold mixture for the evaporator.</p>
+                            <h3>Key Parameters</h3>
+                            <p><strong>Inlet Pressure:</strong> <span id="exp-inlet-p">10.0 bar</span></p>
+                            <p><strong>Inlet Temperature:</strong> <span id="exp-inlet-t">35°C</span></p>
+                            <p><strong>Outlet Pressure:</strong> <span id="exp-outlet-p">2.5 bar</span></p>
+                            <p><strong>Outlet Temperature:</strong> <span id="exp-outlet-t">-5°C</span></p>
+                            <p><strong>Pressure Drop:</strong> <span id="exp-pressure-drop">7.5 bar</span></p>
+                        </div>
+                    </section>
+
+                    <section id="info-container" class="sim2-panel">
+                        <h2>Evaporator</h2>
+                        <div class="state-point">
+                            <h3>Function</h3>
+                            <p>Absorbs heat from the refrigerated space, vaporizing the cold liquid-vapor mixture and returning it as low-pressure vapor.</p>
+                            <h3>Key Parameters</h3>
+                            <p><strong>Inlet Pressure:</strong> <span id="evap-inlet-p">2.5 bar</span></p>
+                            <p><strong>Inlet Temperature:</strong> <span id="evap-inlet-t">-5°C</span></p>
+                            <p><strong>Outlet Pressure:</strong> <span id="evap-outlet-p">2.5 bar</span></p>
+                            <p><strong>Outlet Temperature:</strong> <span id="evap-outlet-t">-5°C</span></p>
+                            <p><strong>Cooling Capacity:</strong> <span id="evap-cooling-cap">-</span> kW</p>
+                        </div>
+                    </section>
+                </aside>
+            </div>
+        </div>
+    </section>
+-->
+    <!-- Experiments -->
+    <section id="experiments" class="page">
+        <h2 class="page-title">Pre-Defined Experiments</h2>
+
+        <div class="experiment-list" id="experiment-list">
+            <!-- Filled from static template below and/or backend if needed -->
+            <div class="experiment-card">
+                <h3><i class="fas fa-temperature-low"></i> Experiment 1</h3>
+                <p><strong>Effect of Evaporator Temperature on COP</strong></p>
+                <p>Investigate how changing evaporator temperature affects COP and compressor power.</p>
+                <button class="btn start-experiment" data-exp="1">View Details</button>
+            </div>
+            <div class="experiment-card">
+                <h3><i class="fas fa-temperature-high"></i> Experiment 2</h3>
+                <p><strong>Effect of Condenser Temperature on Compressor Work</strong></p>
+                <p>Analyze the influence of condenser temperature on compressor energy consumption.</p>
+                <button class="btn start-experiment" data-exp="2">View Details</button>
+            </div>
+            <div class="experiment-card">
+                <h3><i class="fas fa-exchange-alt"></i> Experiment 3</h3>
+                <p><strong>Comparison of Refrigerants</strong></p>
+                <p>Compare performance of R22, R134a, R410A, R32, R600a, and R290 under identical conditions.</p>
+                <button class="btn start-experiment" data-exp="3">View Details</button>
+            </div>
+            <div class="experiment-card">
+                <h3><i class="fas fa-fire"></i> Experiment 4</h3>
+                <p><strong>Effect of Superheating on Cycle Efficiency</strong></p>
+                <p>Study how superheating degree impacts efficiency and compressor work.</p>
+                <button class="btn start-experiment" data-exp="4">View Details</button>
+            </div>
+            <div class="experiment-card">
+                <h3><i class="fas fa-compress-arrows-alt"></i> Experiment 5</h3>
+                <p><strong>Two-Stage vs Single-Stage Performance</strong></p>
+                <p>Compare performance of single-stage and two-stage compression systems.</p>
+                <button class="btn start-experiment" data-exp="5">View Details</button>
+            </div>
+            <div class="experiment-card">
+                <h3><i class="fas fa-water"></i> Experiment 6</h3>
+                <p><strong>Effect of Subcooling on Refrigeration Effect</strong></p>
+                <p>Investigate how subcooling increases refrigeration effect and COP.</p>
+                <button class="btn start-experiment" data-exp="6">View Details</button>
+            </div>
+        </div>
+
+        <div id="experiment-details" class="content-card" style="display:none;">
+            <h2 id="exp-title">Experiment Details</h2>
+            <div id="exp-content">
+                <!-- Filled by JS -->
+            </div>
+            <button id="back-to-experiments" class="btn" style="margin-top:10px;">Back to Experiments</button>
+        </div>
+    </section>
+
+    <!-- Results -->
+    <section id="results" class="page">
+        <h2 class="page-title">Results & Export</h2>
+        <div class="content-card">
+            <h2>Export Options</h2>
+            <p>Use these options to export the latest simulation results.</p>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin-top:10px;">
+                <div>
+                    <h3><i class="fas fa-file-csv"></i> CSV/Text Export</h3>
+                    <p>Exports all state points, performance metrics, and operating conditions in a text/CSV-style format.</p>
+                    <button id="export-csv-full" class="btn">Export Data</button>
+                </div>
+                <div>
+                    <h3><i class="fas fa-file-pdf"></i> PDF Report</h3>
+                    <p>Generates a formatted PDF report with tables and (optionally) embedded diagrams.</p>
+                    <button id="export-pdf-full" class="btn">Generate Report</button>
+                </div>
+                <div>
+                    <h3><i class="fas fa-chart-bar"></i> Chart Images</h3>
+                    <p>Download the current P-h and T-s diagrams as PNG images for presentations and reports.</p>
+                    <button id="export-charts" class="btn">Download Charts</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About -->
+    <section id="about" class="page">
+        <h2 class="page-title">About This Virtual Lab</h2>
+        <div class="content-card">
+            <h2>Overview</h2>
+            <p>This Virtual Refrigeration System Simulator is designed as an educational tool for 
+               students, researchers, and engineers to visualize and analyze vapor compression 
+               refrigeration cycles.</p>
+
+            <h3>Key Features</h3>
+            <ul>
+                <li>Single-stage and two-stage cycle models.</li>
+                <li>Multiple refrigerants with basic property data.</li>
+                <li>Interactive P-h and T-s diagrams.</li>
+                <li>Pre-defined experiments with optional automated sweeps.</li>
+                <li>Export of results to CSV, Excel, and PDF.</li>
+            </ul>
+
+            <h3>Technology Stack</h3>
+            <ul>
+                <li><strong>Frontend:</strong> HTML, CSS, JavaScript, Chart.js</li>
+                <li><strong>Backend:</strong> Python, Flask</li>
+            </ul>
+
+            <h3>Usage</h3>
+            <ol>
+                <li>Start the Flask backend (default: <code>http://localhost:5000</code>).</li>
+                <li>Open this <code>index.html</code> file in a browser.</li>
+                <li>Go to the Simulation tab, adjust inputs, and click "Calculate Cycle".</li>
+                <li>View state points, performance metrics, and diagrams.</li>
+                <li>Use the Results tab or buttons in the Simulation tab to export your data.</li>
+            </ol>
+
+            <h3>Created by</h3>
+            <ol>
+                <li>Sanket Sambhaji Pharne</li>
+                <li>Sanket Ramchandra Lohar</li>
+                <li>Farhan Aslam Chamanshaikh</li>
+                <li>Omkar Tanaji Shinde</li>
+                <li>Rushikesh Hindrao Mali</li>
+            </ol>
+
+            <h3>Under the Guidance of</h3>
+            <p><strong>Prof. Ghanashyam Chendke</strong></p>
+        </div>
+    </section>
+</main>
+
+<footer>
+    <div class="container footer-content">
+        <div class="footer-section">
+            <h3>Virtual Refrigeration Lab</h3>
+            <p>Interactive platform for studying refrigeration systems and thermodynamic cycles.</p>
+        </div>
+        <div class="footer-section">
+            <h3>Modules</h3>
+            <ul>
+                <li>Single-stage vapor compression</li>
+                <li>Two-stage compression</li>
+                <li>Refrigerant comparison</li>
+                <li>Experiment workflows</li>
+            </ul>
+        </div>
+        <div class="footer-section">
+            <h3>Exports</h3>
+            <ul>
+                <li>CSV / Text</li>
+                <li>Excel Workbook</li>
+                <li>PDF Report</li>
+                <li>Chart Images</li>
+            </ul>
+        </div>
+    </div>
+    <div class="copyright">
+        Virtual Refrigeration System Simulator &copy; <span id="year"></span>
+    </div>
+</footer>
+
+<script>
+    // ===== Configuration =====
+    const API_BASE = 'http://localhost:5000';  // Change if backend runs elsewhere
+
+    let currentResults = null;   // last /calculate results.results
+    let currentCharts = null;    // last /calculate charts
+    let phChart = null;
+    let tsChart = null;
+    let currentModelType = 'single-stage';
+
+    document.addEventListener('DOMContentLoaded', () => {
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        initNavigation();
+        initSliders();
+        initSystemDiagram();
+        initModelSelector();
+        initButtons();
+
+        loadRefrigerants().then(() => {
+            // First calculation with defaults
+            calculateCycle();
+        });
+    });
+
+    // ===== Navigation / SPA handling =====
+    function initNavigation() {
+        const nav = document.getElementById('mainNav');
+        const navLinks = document.querySelectorAll('.nav-link');
+        const mobileBtn = document.getElementById('mobileMenuBtn');
+
+        function showPage(id) {
+            document.querySelectorAll('.page').forEach(sec => {
+                sec.classList.toggle('active', sec.id === id);
+            });
+            navLinks.forEach(link => {
+                const target = link.getAttribute('href').replace('#', '');
+                link.classList.toggle('active', target === id);
+            });
+        }
+
+        navLinks.forEach(link => {
+            link.addEventListener('click', e => {
+                e.preventDefault();
+                const target = link.getAttribute('href').replace('#', '');
+                showPage(target);
+                if (window.innerWidth <= 768) {
+                    nav.classList.remove('open');
+                }
+            });
+        });
+
+        document.querySelectorAll('.start-simulation').forEach(btn => {
+            btn.addEventListener('click', e => {
+                e.preventDefault();
+                showPage('simulation');
+                document.querySelector('.nav-link[href="#simulation"]').classList.add('active');
+            });
+        });
+
+        mobileBtn.addEventListener('click', () => {
+            nav.classList.toggle('open');
+        });
+
+        // Handle hash on first load (optional)
+        const hash = window.location.hash.replace('#', '');
+        if (hash && document.getElementById(hash)) {
+            showPage(hash);
+        } else {
+            showPage('home');
+        }
+    }
+
+    // ===== Sliders display =====
+    function initSliders() {
+        const evapSlider = document.getElementById('evap-temp');
+        const condSlider = document.getElementById('cond-temp');
+        const evapVal = document.getElementById('evap-temp-value');
+        const condVal = document.getElementById('cond-temp-value');
+
+        function updateEvap() { evapVal.textContent = evapSlider.value + ' °C'; }
+        function updateCond() { condVal.textContent = condSlider.value + ' °C'; }
+
+        evapSlider.addEventListener('input', updateEvap);
+        condSlider.addEventListener('input', updateCond);
+
+        updateEvap();
+        updateCond();
+    }
+
+    // ===== System diagram =====
+    function initSystemDiagram() {
+        const diagram = document.getElementById('systemDiagram');
+        if (!diagram) return;
+
+        diagram.innerHTML = `
+            <div class="component" id="comp" style="top:40%;left:10%;">
+                <div class="component-icon"><i class="fas fa-compress"></i></div>
+                <div class="component-label">Compressor</div>
+                <div class="component-value" id="comp-info">In: -, Out: -</div>
+            </div>
+            <div class="component" id="cond" style="top:10%;left:55%;">
+                <div class="component-icon"><i class="fas fa-water"></i></div>
+                <div class="component-label">Condenser</div>
+                <div class="component-value" id="cond-info">In: -, Out: -</div>
+            </div>
+            <div class="component" id="exp" style="top:40%;left:85%;">
+                <div class="component-icon"><i class="fas fa-expand-arrows-alt"></i></div>
+                <div class="component-label">Expansion Valve</div>
+                <div class="component-value" id="exp-info">In: -, Out: -</div>
+            </div>
+            <div class="component" id="evap" style="top:75%;left:55%;">
+                <div class="component-icon"><i class="fas fa-snowflake"></i></div>
+                <div class="component-label">Evaporator</div>
+                <div class="component-value" id="evap-info">In: -, Out: -</div>
+            </div>
+
+            <div class="flow-arrow" id="arrow-12" style="top:35%;left:24%;">➜</div>
+            <div class="flow-arrow" id="arrow-23" style="top:22%;left:66%;transform:rotate(90deg);">➜</div>
+            <div class="flow-arrow" id="arrow-34" style="top:55%;left:78%;transform:rotate(180deg);">➜</div>
+            <div class="flow-arrow" id="arrow-41" style="top:65%;left:32%;transform:rotate(270deg);">➜</div>
+        `;
+    }
+
+    function updateSystemDiagramFromResults(state) {
+        if (!state) return;
+        const s1 = state['1'], s2 = state['2'], s3 = state['3'], s4 = state['4'];
+        if (!s1 || !s2 || !s3 || !s4) return;
+
+        const compInfo = document.getElementById('comp-info');
+        const condInfo = document.getElementById('cond-info');
+        const expInfo  = document.getElementById('exp-info');
+        const evapInfo = document.getElementById('evap-info');
+
+        if (compInfo) compInfo.innerHTML =
+            `In: ${formatNum(s1.T,1)}°C / ${formatNum(s1.P,0)}kPa<br>Out: ${formatNum(s2.T,1)}°C / ${formatNum(s2.P,0)}kPa`;
+        if (condInfo) condInfo.innerHTML =
+            `In: ${formatNum(s2.T,1)}°C / ${formatNum(s2.P,0)}kPa<br>Out: ${formatNum(s3.T,1)}°C / ${formatNum(s3.P,0)}kPa`;
+        if (expInfo) expInfo.innerHTML =
+            `In: ${formatNum(s3.T,1)}°C / ${formatNum(s3.P,0)}kPa<br>Out: ${formatNum(s4.T,1)}°C / ${formatNum(s4.P,0)}kPa`;
+        if (evapInfo) evapInfo.innerHTML =
+            `In: ${formatNum(s4.T,1)}°C / ${formatNum(s4.P,0)}kPa<br>Out: ${formatNum(s1.T,1)}°C / ${formatNum(s1.P,0)}kPa`;
+    }
+
+    // ===== Model selector =====
+    function initModelSelector() {
+        const buttons = document.querySelectorAll('.model-btn');
+        buttons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                buttons.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentModelType = btn.dataset.model || 'single-stage';
+                // For now we compute same way; back-end switches for two-stage internally
+                calculateCycle();
+            });
+        });
+    }
+
+    // ===== Backend integration =====
+    // Safe number formatting helper to avoid calling toFixed on null/undefined
+    function formatNum(value, digits = 2) {
+        if (value === null || value === undefined) return 'N/A';
+        const n = Number(value);
+        return Number.isFinite(n) ? n.toFixed(digits) : 'N/A';
+    }
+    async function loadRefrigerants() {
+        const select = document.getElementById('refrigerant');
+        try {
+            console.log('Connecting to backend at:', API_BASE);
+            const res = await fetch(API_BASE + '/refrigerants', {
+                method: 'GET',
+                headers: {'Content-Type': 'application/json'}
+            });
+            
+            if (!res.ok) {
+                throw new Error(`Server responded with status ${res.status}`);
+            }
+            
+            const data = await res.json();
+            console.log('Refrigerants loaded successfully:', Object.keys(data));
+            
+            select.innerHTML = '';
+            const keys = Object.keys(data);
+            if (keys.length === 0) {
+                // Fallback
+                console.warn('No refrigerants from server, using fallback');
+                ['R134a','R22','R410A','R32','R600a','R290'].forEach(r => {
+                    const opt = document.createElement('option');
+                    opt.value = r;
+                    opt.textContent = r;
+                    select.appendChild(opt);
+                });
+            } else {
+                keys.forEach(key => {
+                    const opt = document.createElement('option');
+                    opt.value = key;
+                    opt.textContent = key;
+                    select.appendChild(opt);
+                });
+            }
+        } catch (e) {
+            console.error('❌ Error loading refrigerants:', e);
+            console.error('Backend URL:', API_BASE);
+            console.error('Make sure Flask is running with: python app.py');
+            
+            // Use fallback refrigerants
+            ['R134a','R22','R410A','R32','R600a','R290'].forEach(r => {
+                const opt = document.createElement('option');
+                opt.value = r;
+                opt.textContent = r;
+                select.appendChild(opt);
+            });
+            
+            alert('⚠️  Could not connect to backend at ' + API_BASE + 
+                  '\n\nPlease start the Flask backend:\n1. Open Command Prompt\n2. Navigate to: ' + 
+                  API_BASE.replace('http://localhost:5000', 'refrigeration-backend folder') + 
+                  '\n3. Run: python app.py\n\nUsing fallback refrigerants for now.');
+        }
+    }
+
+    async function calculateCycle() {
+        const btn = document.getElementById('calculate-btn');
+        if (!btn) return;
+
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Calculating...';
+
+        const payload = {
+            refrigerant: document.getElementById('refrigerant').value,
+            evaporator_temp: parseFloat(document.getElementById('evap-temp').value),
+            condenser_temp: parseFloat(document.getElementById('cond-temp').value),
+            superheat: parseFloat(document.getElementById('superheat').value),
+            subcool: parseFloat(document.getElementById('subcool').value),
+            compressor_efficiency: parseFloat(document.getElementById('comp-efficiency').value),
+            cooling_load: parseFloat(document.getElementById('cooling-load').value),
+            model_type: currentModelType
+        };
+
+        try {
+            console.log('Sending calculation request to:', API_BASE + '/calculate');
+            console.log('Payload:', payload);
+            
+            const res = await fetch(API_BASE + '/calculate', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(payload)
+            });
+            
+            if (!res.ok) {
+                throw new Error(`Server responded with status ${res.status}: ${res.statusText}`);
+            }
+            
+            const data = await res.json();
+            console.log('✓ Calculation successful:', data);
+            
+            if (!data.success) {
+                alert('Calculation error: ' + (data.error || 'Unknown error'));
+                return;
+            }
+            
+            currentResults = data.results;
+            currentCharts = data.charts || {};
+
+            updateResultsTable(currentResults.state_points);
+            updatePerformance(currentResults.performance);
+            updateSystemDiagramFromResults(currentResults.state_points);
+            updateCharts(currentResults.state_points);
+            updateMassFlowInput(currentResults.performance);
+        } catch (e) {
+            console.error('❌ Error calling /calculate:', e);
+            console.error('Backend URL:', API_BASE);
+            console.error('Network error details:', e.message);
+            
+            let errorMsg = 'Failed to contact backend.\n\n';
+            
+            if (e.message.includes('Failed to fetch')) {
+                errorMsg += '🔴 Connection refused - Backend is not running\n\n';
+                errorMsg += 'To start the backend:\n';
+                errorMsg += '1. Open Command Prompt\n';
+                errorMsg += '2. cd refrigeration-backend\n';
+                errorMsg += '3. python app.py\n\n';
+                errorMsg += 'The server should run at http://localhost:5000';
+            } else {
+                errorMsg += 'Error: ' + e.message + '\n\n';
+                errorMsg += 'Ensure Flask backend is running at: ' + API_BASE;
+            }
+            
+            alert(errorMsg);
+        } finally {
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-calculator"></i> Calculate Cycle';
+        }
+    }
+
+    function updateResultsTable(state) {
+        const tbody = document.getElementById('results-body');
+        tbody.innerHTML = '';
+        if (!state) return;
+        ['1','2','3','4'].forEach(id => {
+            const p = state[id];
+            if (!p) return;
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>${id}</td>
+                <td>${formatNum(p.P,2)}</td>
+                <td>${formatNum(p.T,2)}</td>
+                <td>${formatNum(p.h,2)}</td>
+                <td>${formatNum(p.s,3)}</td>
+                <td>${p.quality == null ? 'N/A' : formatNum(p.quality,3)}</td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    function updatePerformance(perf) {
+        if (!perf) return;
+        const set = (id, text) => {
+            const el = document.getElementById(id);
+            if (el) el.textContent = text;
+        };
+        // Use formatNum helper and append units where applicable
+        const copText = formatNum(perf.COP, 3);
+        set('cop-value', copText);
+
+        const compWorkRaw = perf.compressor_power ?? perf.compressor_work ?? null;
+        const compWorkText = compWorkRaw === null ? 'N/A' : formatNum(compWorkRaw, 2) + ' kW';
+        set('comp-work-value', compWorkText);
+
+        const refEffText = formatNum(perf.refrigeration_effect, 2);
+        set('ref-effect-value', refEffText === 'N/A' ? 'N/A' : refEffText + ' kW');
+
+        const mfText = formatNum(perf.mass_flow_rate, 4);
+        set('mass-flow-value', mfText === 'N/A' ? 'N/A' : mfText + ' kg/s');
+
+        const hrText = formatNum(perf.heat_rejected, 2);
+        set('heat-rejected-value', hrText === 'N/A' ? 'N/A' : hrText + ' kW');
+
+        const volEffText = formatNum(perf.volumetric_efficiency, 1);
+        set('vol-eff-value', volEffText === 'N/A' ? 'N/A' : volEffText + ' %');
+    }
+
+    function updateMassFlowInput(perf) {
+        const mfInput = document.getElementById('mass-flow');
+        if (mfInput && perf && typeof perf.mass_flow_rate === 'number') {
+            mfInput.value = perf.mass_flow_rate.toFixed(4);
+        }
+    }
+
+    // ===== Charts (Display Backend-Generated Diagrams) =====
+    function updateCharts(state) {
+        // Check if backend provided diagram images
+        if (currentCharts && currentCharts.ph_diagram && currentCharts.ts_diagram) {
+            displayBackendDiagrams(currentCharts.ph_diagram, currentCharts.ts_diagram);
+            return;
+        }
+        
+        // Fallback: Create diagrams from state points if no backend images
+        if (!state) return;
+        const points = ['1','2','3','4'].map(id => state[id]).filter(Boolean);
+        if (points.length < 4) return;
+
+        // Close the loop by adding first again
+        const phData = points.concat([points[0]]).map(p => ({x: p.h, y: p.P}));
+        const tsData = points.concat([points[0]]).map(p => ({x: p.s, y: p.T}));
+
+        const phCanvas = document.getElementById('ph-chart');
+        const tsCanvas = document.getElementById('ts-chart');
+        
+        const phCtx = phCanvas.getContext('2d');
+        const tsCtx = tsCanvas.getContext('2d');
+
+        if (!phChart) {
+            phChart = new Chart(phCtx, {
+                type: 'line',
+                data: {
+                    datasets: [{
+                        label: 'Cycle',
+                        data: phData,
+                        borderColor: '#1a73e8',
+                        backgroundColor: 'rgba(26,115,232,0.15)',
+                        pointBackgroundColor: '#1a73e8',
+                        pointRadius: 4,
+                        tension: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    parsing: false,
+                    scales: {
+                        x: {
+                            title: {display: true, text: 'Enthalpy (kJ/kg)'}
+                        },
+                        y: {
+                            title: {display: true, text: 'Pressure (kPa)'}
+                        }
+                    },
+                    plugins: {
+                        legend: {display: false}
+                    }
+                }
+            });
+        } else {
+            phChart.data.datasets[0].data = phData;
+            phChart.update();
+        }
+
+        if (!tsChart) {
+            tsChart = new Chart(tsCtx, {
+                type: 'line',
+                data: {
+                    datasets: [{
+                        label: 'Cycle',
+                        data: tsData,
+                        borderColor: '#e53935',
+                        backgroundColor: 'rgba(229,57,53,0.15)',
+                        pointBackgroundColor: '#e53935',
+                        pointRadius: 4,
+                        tension: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    parsing: false,
+                    scales: {
+                        x: {
+                            title: {display: true, text: 'Entropy (kJ/kg·K)'}
+                        },
+                        y: {
+                            title: {display: true, text: 'Temperature (°C)'}
+                        }
+                    },
+                    plugins: {
+                        legend: {display: false}
+                    }
+                }
+            });
+        } else {
+            tsChart.data.datasets[0].data = tsData;
+            tsChart.update();
+        }
+    }
+
+    // ===== Display Backend Diagrams as Images =====
+    function displayBackendDiagrams(phDiagramBase64, tsDiagramBase64) {
+        console.log('displayBackendDiagrams called');
+        console.log('phDiagramBase64 length:', phDiagramBase64 ? phDiagramBase64.length : 0);
+        console.log('tsDiagramBase64 length:', tsDiagramBase64 ? tsDiagramBase64.length : 0);
+        
+        const phCanvas = document.getElementById('ph-chart');
+        const tsCanvas = document.getElementById('ts-chart');
+        
+        if (!phCanvas || !tsCanvas) {
+            console.error('❌ Diagram canvas elements not found');
+            return;
+        }
+
+        try {
+            let phContainer = phCanvas.parentElement;
+            let tsContainer = tsCanvas.parentElement;
+            
+            console.log('phContainer:', phContainer);
+            console.log('tsContainer:', tsContainer);
+            
+            // Replace P-h diagram
+            if (phDiagramBase64) {
+                console.log('Creating P-h diagram image...');
+                phCanvas.style.display = 'none';
+                
+                // Remove old image if exists
+                let oldImg = phContainer.querySelector('img.backend-ph-diagram');
+                if (oldImg) oldImg.remove();
+                
+                let phImg = document.createElement('img');
+                phImg.className = 'backend-ph-diagram';
+                phImg.style.width = '100%';
+                phImg.style.height = 'auto';
+                phImg.style.maxHeight = '400px';
+                phImg.style.objectFit = 'contain';
+                phImg.style.border = '1px solid #ddd';
+                phImg.style.borderRadius = '4px';
+                
+                // Set source
+                phImg.src = phDiagramBase64.startsWith('data:') ? phDiagramBase64 : 'data:image/png;base64,' + phDiagramBase64;
+                
+                phImg.onload = () => console.log('✓ P-h diagram loaded');
+                phImg.onerror = (e) => console.error('❌ P-h diagram failed to load:', e);
+                
+                phContainer.appendChild(phImg);
+                console.log('✓ P-h diagram appended to DOM');
+            }
+            
+            // Replace T-s diagram
+            if (tsDiagramBase64) {
+                console.log('Creating T-s diagram image...');
+                tsCanvas.style.display = 'none';
+                
+                // Remove old image if exists
+                let oldImg = tsContainer.querySelector('img.backend-ts-diagram');
+                if (oldImg) oldImg.remove();
+                
+                let tsImg = document.createElement('img');
+                tsImg.className = 'backend-ts-diagram';
+                tsImg.style.width = '100%';
+                tsImg.style.height = 'auto';
+                tsImg.style.maxHeight = '400px';
+                tsImg.style.objectFit = 'contain';
+                tsImg.style.border = '1px solid #ddd';
+                tsImg.style.borderRadius = '4px';
+                
+                // Set source
+                tsImg.src = tsDiagramBase64.startsWith('data:') ? tsDiagramBase64 : 'data:image/png;base64,' + tsDiagramBase64;
+                
+                tsImg.onload = () => console.log('✓ T-s diagram loaded');
+                tsImg.onerror = (e) => console.error('❌ T-s diagram failed to load:', e);
+                
+                tsContainer.appendChild(tsImg);
+                console.log('✓ T-s diagram appended to DOM');
+            }
+            
+            console.log('✓ Backend diagrams displayed successfully');
+        } catch (e) {
+            console.error('❌ Error displaying backend diagrams:', e);
+            console.error('Stack:', e.stack);
+        }
+    }
+
+    // ===== Buttons: calculate, start/pause/reset, exports, screenshot =====
+    function initButtons() {
+        const calcBtn = document.getElementById('calculate-btn');
+        if (calcBtn) {
+            calcBtn.addEventListener('click', () => calculateCycle());
+        }
+
+        const startBtn = document.getElementById('start-btn');
+        const pauseBtn = document.getElementById('pause-btn');
+        const resetBtn = document.getElementById('reset-btn');
+
+        const arrows = () => document.querySelectorAll('.flow-arrow');
+
+        if (startBtn) {
+            startBtn.addEventListener('click', () => {
+                arrows().forEach(a => a.classList.remove('paused'));
+            });
+        }
+        if (pauseBtn) {
+            pauseBtn.addEventListener('click', () => {
+                arrows().forEach(a => a.classList.add('paused'));
+            });
+        }
+        if (resetBtn) {
+            resetBtn.addEventListener('click', () => {
+                arrows().forEach(a => a.classList.add('paused'));
+                if (currentResults) {
+                    updateSystemDiagramFromResults(currentResults.state_points);
+                }
+            });
+        }
+
+        // Export buttons (simulation page)
+        document.getElementById('export-csv')?.addEventListener('click', () => exportCSV(false));
+        document.getElementById('export-pdf')?.addEventListener('click', () => exportPDF(false));
+
+        // Screenshot
+        document.getElementById('screenshot')?.addEventListener('click', takeScreenshot);
+
+        // Results page exports
+        document.getElementById('export-csv-full')?.addEventListener('click', () => exportCSV(true));
+        document.getElementById('export-pdf-full')?.addEventListener('click', () => exportPDF(true));
+        document.getElementById('export-charts')?.addEventListener('click', downloadCharts);
+
+        // Experiments
+        document.querySelectorAll('.start-experiment').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const id = btn.dataset.exp;
+                loadExperimentDetails(id);
+            });
+        });
+        document.getElementById('back-to-experiments')?.addEventListener('click', () => {
+            document.getElementById('experiment-details').style.display = 'none';
+            document.getElementById('experiment-list').style.display = 'grid';
+        });
+    }
+
+    async function exportCSV(fromResultsSection) {
+        if (!currentResults) {
+            alert('Run a simulation first.');
+            return;
+        }
+        try {
+            console.log('📄 Exporting text data...', 'currentResults keys:', Object.keys(currentResults));
+            const res = await fetch(API_BASE + '/export/csv', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(currentResults)
+            });
+            if (!res.ok) {
+                const txt = await res.text();
+                throw new Error('Failed to export text: ' + txt);
+            }
+            const blob = await res.blob();
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'refrigeration_data.txt';
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            URL.revokeObjectURL(url);
+            console.log('✅ Text export successful');
+        } catch (e) {
+            console.error(e);
+            alert('Text export failed: ' + e.message);;
+        }
+    }
+
+    async function exportPDF(fromResultsSection) {
+        if (!currentResults) {
+            alert('Run a simulation first.');
+            return;
+        }
+        try {
+            console.log('📊 Exporting PDF...', 'currentResults keys:', Object.keys(currentResults));
+            const payload = Object.assign({}, currentResults, {
+                charts: currentCharts || {}
+            });
+            console.log('📄 PDF Payload keys:', Object.keys(payload));
+            console.log('📄 operating_conditions:', payload.operating_conditions);
+            console.log('📄 performance:', payload.performance);
+
+            const res = await fetch(API_BASE + '/export/pdf', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(payload)
+            });
+            if (!res.ok) {
+                // Try to read error message from server
+                let msg = 'Failed to export PDF';
+                try { msg = await res.text(); } catch(e){}
+                throw new Error(msg || 'Failed to export PDF');
+            }
+            const blob = await res.blob();
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'refrigeration_report.pdf';
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            URL.revokeObjectURL(url);
+            console.log('✅ PDF exported successfully');
+        } catch (e) {
+            console.error(e);
+            alert('PDF export failed: ' + e.message);
+        }
+    }
+
+    function takeScreenshot() {
+        const target = document.querySelector('.simulation-container');
+        if (!target) return;
+        html2canvas(target).then(canvas => {
+            const link = document.createElement('a');
+            link.href = canvas.toDataURL('image/png');
+            link.download = 'simulation_screenshot.png';
+            link.click();
+        });
+    }
+
+    function downloadCharts() {
+        // Download P-h diagram
+        if (currentCharts && currentCharts.ph_diagram) {
+            const link1 = document.createElement('a');
+            link1.href = currentCharts.ph_diagram;
+            link1.download = 'ph_diagram.png';
+            document.body.appendChild(link1);
+            link1.click();
+            link1.remove();
+            console.log('✓ P-h diagram downloaded');
+        } else {
+            console.warn('P-h diagram not available');
+        }
+        
+        // Download T-s diagram
+        if (currentCharts && currentCharts.ts_diagram) {
+            const link2 = document.createElement('a');
+            link2.href = currentCharts.ts_diagram;
+            link2.download = 'ts_diagram.png';
+            document.body.appendChild(link2);
+            link2.click();
+            link2.remove();
+            console.log('✓ T-s diagram downloaded');
+        } else {
+            console.warn('T-s diagram not available');
+        }
+    }
+
+    // ===== Experiments detail view =====
+    async function loadExperimentDetails(id) {
+        const detailsCard = document.getElementById('experiment-details');
+        const list = document.getElementById('experiment-list');
+        const titleEl = document.getElementById('exp-title');
+        const contentEl = document.getElementById('exp-content');
+
+        try {
+            const res = await fetch(API_BASE + '/experiment/' + id);
+            if (!res.ok) throw new Error('Experiment not found');
+            const data = await res.json();
+
+            titleEl.textContent = data.title || ('Experiment ' + id);
+            let html = '';
+
+            if (data.description) {
+                html += `<p><strong>Description:</strong> ${data.description}</p>`;
+            }
+            if (data.objectives && data.objectives.length) {
+                html += '<h3>Objectives</h3><ul>';
+                data.objectives.forEach(o => { html += `<li>${o}</li>`; });
+                html += '</ul>';
+            }
+            if (data.procedure && data.procedure.length) {
+                html += '<h3>Procedure</h3><ol>';
+                data.procedure.forEach(p => { html += `<li>${p}</li>`; });
+                html += '</ol>';
+            }
+
+            if (data.results && data.results.data_points && data.results.data_points.length) {
+                html += '<h3>Sample Results</h3>';
+                html += '<table class="results-table"><thead><tr>';
+                const keys = Object.keys(data.results.data_points[0]);
+                keys.forEach(k => { html += `<th>${k}</th>`; });
+                html += '</tr></thead><tbody>';
+                data.results.data_points.forEach(row => {
+                    html += '<tr>';
+                    keys.forEach(k => { html += `<td>${row[k]}</td>`; });
+                    html += '</tr>';
+                });
+                html += '</tbody></table>';
+            }
+            if (data.results && data.results.conclusion) {
+                html += `<h3>Conclusion</h3><p>${data.results.conclusion}</p>`;
+            }
+
+            contentEl.innerHTML = html;
+            list.style.display = 'none';
+            detailsCard.style.display = 'block';
+        } catch (e) {
+            console.error(e);
+            alert('Could not load experiment details.');
+        }
+    }
+
+    // ===== Simulation 2: Interactive Refrigeration System =====
+    document.addEventListener('DOMContentLoaded', () => {
+        // Check if we're on the simulation2 page
+        if (!document.getElementById('simulation2')) return;
+
+        // DOM Element Selection
+        const startBtn = document.getElementById('start-btn');
+        const stopBtn = document.getElementById('stop-btn');
+
+        // Component Information Elements
+        const compInletP = document.getElementById('comp-inlet-p');
+        const compInletT = document.getElementById('comp-inlet-t');
+        const compOutletP = document.getElementById('comp-outlet-p');
+        const compOutletT = document.getElementById('comp-outlet-t');
+        const compRatio = document.getElementById('comp-ratio');
+
+        const condInletP = document.getElementById('cond-inlet-p');
+        const condInletT = document.getElementById('cond-inlet-t');
+        const condOutletP = document.getElementById('cond-outlet-p');
+        const condOutletT = document.getElementById('cond-outlet-t');
+        const condHeatRejected = document.getElementById('cond-heat-rejected');
+
+        const expInletP = document.getElementById('exp-inlet-p');
+        const expInletT = document.getElementById('exp-inlet-t');
+        const expOutletP = document.getElementById('exp-outlet-p');
+        const expOutletT = document.getElementById('exp-outlet-t');
+        const expPressureDrop = document.getElementById('exp-pressure-drop');
+
+        const evapInletP = document.getElementById('evap-inlet-p');
+        const evapInletT = document.getElementById('evap-inlet-t');
+        const evapOutletP = document.getElementById('evap-outlet-p');
+        const evapOutletT = document.getElementById('evap-outlet-t');
+        const evapCoolingCap = document.getElementById('evap-cooling-cap');
+
+        // SVG Pipe Elements
+        const pipe12 = document.getElementById('pipe-1-2');
+        const pipe23 = document.getElementById('pipe-2-3');
+        const pipe34 = document.getElementById('pipe-3-4');
+        const pipe41 = document.getElementById('pipe-4-1');
+
+        // State Management
+        const state = {
+            isRunning: false,
+            p1: 0, t1: 0,
+            p2: 0, t2: 0,
+            p3: 0, t3: 0,
+            p4: 0, t4: 0,
+        };
+
+        // Simulation Logic
+        function calculateSystemState() {
+            // Simplified model based on ambient and load conditions
+            // Point 1: Evaporator outlet (low pressure, low temp vapor)
+            state.p1 = 2.5;
+            state.t1 = -5.0;
+
+            // Point 2: Compressor outlet (high pressure, high temp vapor)
+            state.p2 = 10.0;
+            state.t2 = 75.0;
+
+            // Point 3: Condenser outlet (high pressure, medium temp liquid)
+            state.p3 = 10.0;
+            state.t3 = 35.0;
+
+            // Point 4: Expansion valve outlet (low pressure, low temp mix)
+            state.p4 = 2.5;
+            state.t4 = -5.0;
+        }
+
+        // View Update Functions
+        function interpolateColor(value, min, max, colorCold, colorHot) {
+            const ratio = (value - min) / (max - min);
+            const r = Math.round(parseInt(colorCold.slice(1, 3), 16) * (1 - ratio) + parseInt(colorHot.slice(1, 3), 16) * ratio);
+            const g = Math.round(parseInt(colorCold.slice(3, 5), 16) * (1 - ratio) + parseInt(colorHot.slice(3, 5), 16) * ratio);
+            const b = Math.round(parseInt(colorCold.slice(5, 7), 16) * (1 - ratio) + parseInt(colorHot.slice(5, 7), 16) * ratio);
+            return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
+        }
+
+        function updateDisplay() {
+            // Update Compressor information
+            compInletP.textContent = `${state.p1.toFixed(1)}`;
+            compInletT.textContent = `${state.t1.toFixed(1)}`;
+            compOutletP.textContent = `${state.p2.toFixed(1)}`;
+            compOutletT.textContent = `${state.t2.toFixed(1)}`;
+            compRatio.textContent = `${(state.p2 / state.p1).toFixed(2)}`;
+
+            // Update Condenser information
+            condInletP.textContent = `${state.p2.toFixed(1)}`;
+            condInletT.textContent = `${state.t2.toFixed(1)}`;
+            condOutletP.textContent = `${state.p3.toFixed(1)}`;
+            condOutletT.textContent = `${state.t3.toFixed(1)}`;
+            condHeatRejected.textContent = `${((state.t2 - state.t3) * 0.5).toFixed(1)}`;
+
+            // Update Expansion Valve information
+            expInletP.textContent = `${state.p3.toFixed(1)}`;
+            expInletT.textContent = `${state.t3.toFixed(1)}`;
+            expOutletP.textContent = `${state.p4.toFixed(1)}`;
+            expOutletT.textContent = `${state.t4.toFixed(1)}`;
+            expPressureDrop.textContent = `${(state.p3 - state.p4).toFixed(1)}`;
+
+            // Update Evaporator information
+            evapInletP.textContent = `${state.p4.toFixed(1)}`;
+            evapInletT.textContent = `${state.t4.toFixed(1)}`;
+            evapOutletP.textContent = `${state.p1.toFixed(1)}`;
+            evapOutletT.textContent = `${state.t1.toFixed(1)}`;
+            evapCoolingCap.textContent = `${((state.t1 - state.t4) * 0.5).toFixed(1)}`;
+
+            // Update pipe colors
+            const tempMin = -20, tempMax = 100;
+            pipe12.setAttribute('stroke', interpolateColor(state.t1, tempMin, tempMax, '#007bff', '#dc3545'));
+            pipe23.setAttribute('stroke', interpolateColor(state.t2, tempMin, tempMax, '#007bff', '#dc3545'));
+            pipe34.setAttribute('stroke', interpolateColor(state.t3, tempMin, tempMax, '#007bff', '#dc3545'));
+            pipe41.setAttribute('stroke', interpolateColor(state.t4, tempMin, tempMax, '#007bff', '#dc3545'));
+
+            const baseSpeed = 4;
+            const compressorIcon = document.querySelector('#compressor .rotating');
+            if (compressorIcon) {
+                compressorIcon.style.animationDuration = `2s`;
+            }
+        }
+
+        function updateAnimationState() {
+            const playState = state.isRunning ? 'running' : 'paused';
+            const compressorIcon = document.querySelector('#compressor .rotating');
+            if (compressorIcon) {
+                compressorIcon.style.animationPlayState = playState;
+            }
+        }
+
+        function createParticles() {
+            const svg = document.getElementById('refrigeration-svg');
+            const paths = ['flow-path-1-2', 'flow-path-2-3', 'flow-path-3-4', 'flow-path-4-1'];
+            const numParticles = 4;
+
+            paths.forEach(pathId => {
+                for (let i = 0; i < numParticles; i++) {
+                    const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                    circle.classList.add('refrigerant-particle');
+
+                    const animateMotion = document.createElementNS('http://www.w3.org/2000/svg', 'animateMotion');
+                    animateMotion.setAttribute('dur', '3s');
+                    animateMotion.setAttribute('repeatCount', 'indefinite');
+                    animateMotion.setAttribute('begin', `${i * (3 / numParticles)}s`);
+
+                    const mpath = document.createElementNS('http://www.w3.org/2000/svg', 'mpath');
+                    mpath.setAttributeNS('http://www.w3.org/1999/xlink', 'href', `#${pathId}`);
+
+                    animateMotion.appendChild(mpath);
+                    circle.appendChild(animateMotion);
+                    svg.appendChild(circle);
+                }
+            });
+        }
+
+        startBtn.addEventListener('click', () => {
+            state.isRunning = true;
+            startBtn.disabled = true;
+            stopBtn.disabled = false;
+            updateAnimationState();
+        });
+
+        stopBtn.addEventListener('click', () => {
+            state.isRunning = false;
+            startBtn.disabled = false;
+            stopBtn.disabled = true;
+            updateAnimationState();
+        });
+
+        // Initial Setup
+        createParticles();
+        calculateSystemState();
+        updateDisplay();
+        updateAnimationState();
+    });
+</script>
+</body>
+</html>

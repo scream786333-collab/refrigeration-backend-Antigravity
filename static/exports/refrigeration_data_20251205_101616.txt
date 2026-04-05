@@ -1,0 +1,33 @@
+VIRTUAL REFRIGERATION SYSTEM SIMULATOR - EXPORT DATA
+============================================================
+Generated: 2025-12-05 10:16:16
+Refrigerant: R134a
+Model Type: single-stage
+
+STATE POINTS
+------------------------------------------------------------
+Point   P (kPa)     T (°C)      h (kJ/kg)     s (kJ/kg·K)   Quality   
+------------------------------------------------------------
+1       235.40      -5.00       395.00        1.7815        N/A       
+2       1137.70     66.97       466.97        2.0193        N/A       
+3       1137.70     35.00       249.00        1.1688        N/A       
+4       235.40      -10.00      249.00        1.1995        0.309     
+
+PERFORMANCE PARAMETERS
+------------------------------------------------------------
+Cop                           2.029          -
+Compressor Power              4.929          kW
+Compressor Work               71.97          kW
+Cooling Capacity              10             kW
+Heat Rejected                 217.97         kW
+Mass Flow Rate                0.06849        kg/s
+Refrigeration Effect          146            kW
+Volumetric Efficiency         80.8           %
+
+OPERATING CONDITIONS
+------------------------------------------------------------
+Compressor Efficiency         85             %
+Condenser Temp                40             °C
+Evaporator Temp               -10            °C
+Subcool                       5              
+Superheat                     5              

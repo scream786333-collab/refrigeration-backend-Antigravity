@@ -1,0 +1,33 @@
+VIRTUAL REFRIGERATION SYSTEM SIMULATOR - EXPORT DATA
+============================================================
+Generated: 2025-12-05 10:03:10
+Refrigerant: R22
+Model Type: single-stage
+
+STATE POINTS
+------------------------------------------------------------
+Point   P (kPa)     T (°C)      h (kJ/kg)     s (kJ/kg·K)   Quality   
+------------------------------------------------------------
+1       201.47      -9.00       391.00        1.7665        N/A       
+2       1137.70     67.91       467.91        2.0220        N/A       
+3       1137.70     33.50       246.90        1.1620        N/A       
+4       201.47      -14.00      246.90        1.1919        0.323     
+
+PERFORMANCE PARAMETERS
+------------------------------------------------------------
+Cop                           1.874          -
+Compressor Power              5.337          kW
+Compressor Work               76.91          kW
+Cooling Capacity              10             kW
+Heat Rejected                 221.01         kW
+Mass Flow Rate                0.0694         kg/s
+Refrigeration Effect          144.1          kW
+Volumetric Efficiency         76.8           %
+
+OPERATING CONDITIONS
+------------------------------------------------------------
+Compressor Efficiency         87             %
+Condenser Temp                40             °C
+Evaporator Temp               -14            °C
+Subcool                       6.5            
+Superheat                     5              

@@ -1,0 +1,74 @@
+{
+  "R134a": {
+    "name": "R134a",
+    "formula": "C2H2F4",
+    "molar_mass": 102.03,
+    "critical_temp": 374.21,
+    "critical_pressure": 4059.0,
+    "normal_boiling_point": 247.08,
+    "ODP": 0.0,
+    "GWP": 1430,
+    "safety_class": "A1",
+    "h_fg_ref": 216.0
+  },
+  "R22": {
+    "name": "R22",
+    "formula": "CHClF2",
+    "molar_mass": 86.47,
+    "critical_temp": 369.3,
+    "critical_pressure": 4990.0,
+    "normal_boiling_point": 232.4,
+    "ODP": 0.055,
+    "GWP": 1810,
+    "safety_class": "A1",
+    "h_fg_ref": 230.0
+  },
+  "R410A": {
+    "name": "R410A",
+    "formula": "Blend (R32/R125)",
+    "molar_mass": 72.58,
+    "critical_temp": 344.5,
+    "critical_pressure": 4920.0,
+    "normal_boiling_point": 223.0,
+    "ODP": 0.0,
+    "GWP": 2088,
+    "safety_class": "A1",
+    "h_fg_ref": 210.0
+  },
+  "R32": {
+    "name": "R32",
+    "formula": "CH2F2",
+    "molar_mass": 52.02,
+    "critical_temp": 351.3,
+    "critical_pressure": 5782.0,
+    "normal_boiling_point": 221.4,
+    "ODP": 0.0,
+    "GWP": 675,
+    "safety_class": "A2L",
+    "h_fg_ref": 240.0
+  },
+  "R600a": {
+    "name": "R600a",
+    "formula": "C4H10",
+    "molar_mass": 58.12,
+    "critical_temp": 407.8,
+    "critical_pressure": 3640.0,
+    "normal_boiling_point": 261.4,
+    "ODP": 0.0,
+    "GWP": 3,
+    "safety_class": "A3",
+    "h_fg_ref": 360.0
+  },
+  "R290": {
+    "name": "R290",
+    "formula": "C3H8",
+    "molar_mass": 44.1,
+    "critical_temp": 369.8,
+    "critical_pressure": 4248.0,
+    "normal_boiling_point": 231.0,
+    "ODP": 0.0,
+    "GWP": 3,
+    "safety_class": "A3",
+    "h_fg_ref": 350.0
+  }
+}
