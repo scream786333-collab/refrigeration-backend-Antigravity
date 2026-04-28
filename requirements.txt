@@ -1,6 +1,6 @@
 Flask
 Flask-CORS
-numpy
+numpy>=1.25.0
 pandas
 matplotlib
 reportlab
