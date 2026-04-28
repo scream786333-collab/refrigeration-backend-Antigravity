@@ -542,12 +542,12 @@ def generate_csv_export(data):
 def export_csv():
     d = request.json or {}
     fn = f"refrigeration_data_{datetime.now().strftime('%Y%m%d_%H%M%S')}.txt"
-    fp = os.path.join('static/exports', fn)
     try:
         text_content = generate_csv_export(d)
-        with open(fp, 'w', encoding='utf-8') as f:
-            f.write(text_content)
-        return send_file(fp, as_attachment=True, download_name=fn, mimetype='text/plain')
+        buffer = io.BytesIO()
+        buffer.write(text_content.encode('utf-8'))
+        buffer.seek(0)
+        return send_file(buffer, as_attachment=True, download_name=fn, mimetype='text/plain')
     except Exception as e:
         return jsonify({"success": False, "error": str(e)}), 500
 
@@ -675,10 +675,11 @@ def export_pdf():
     print(f"DEBUG: Payload structure: {json.dumps(d, indent=2, default=str)[:500]}")
     
     fn = f"refrigeration_report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf"
-    fp = os.path.join('static/exports', fn)
     try:
-        generate_pdf_report(d, fp)
-        return send_file(fp, as_attachment=True, download_name=fn, mimetype='application/pdf')
+        buffer = io.BytesIO()
+        generate_pdf_report(d, buffer)
+        buffer.seek(0)
+        return send_file(buffer, as_attachment=True, download_name=fn, mimetype='application/pdf')
     except Exception as e:
         print(f"ERROR in /export/pdf: {e}")
         return jsonify({"success": False, "error": str(e)}), 500
