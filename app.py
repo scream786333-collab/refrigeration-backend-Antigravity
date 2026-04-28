@@ -11,10 +11,10 @@ import numpy as np
 try:
     import CoolProp.CoolProp as CP
     HAS_COOLPROP = True
-    print("✓ High-Accuracy CoolProp Engine Loaded")
+    print("[OK] High-Accuracy CoolProp Engine Loaded")
 except ImportError:
     HAS_COOLPROP = False
-    print("⚠ CoolProp not found. Running in SIMULATION MODE (Approximate).")
+    print("[WARN] CoolProp not found. Running in SIMULATION MODE (Approximate).")
     print("  To fix: pip install CoolProp")
 
 # --- 2. SETUP CHARTING ENGINE (Matplotlib) ---
@@ -30,7 +30,7 @@ except ImportError:
 try:
     from reportlab.lib import colors
     from reportlab.lib.pagesizes import letter
-    from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
+    from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, Image
     from reportlab.lib.styles import getSampleStyleSheet
     HAS_REPORTLAB = True
 except Exception:
@@ -611,13 +611,18 @@ def generate_pdf_report(data, filepath):
         sp_rows = [[Paragraph('Point', styles['Heading4']), Paragraph('P (kPa)', styles['Heading4']), Paragraph('T (°C)', styles['Heading4']), Paragraph('h (kJ/kg)', styles['Heading4']), Paragraph('s', styles['Heading4']), Paragraph('quality', styles['Heading4'])]]
         for pid in ['1','2','3','4']:
             s = states.get(pid, {})
+            P_val = f"{s.get('P'):.2f}" if s.get('P') is not None and s.get('P') != '' else ''
+            T_val = f"{s.get('T'):.1f}" if s.get('T') is not None and s.get('T') != '' else ''
+            h_val = f"{s.get('h'):.2f}" if s.get('h') is not None and s.get('h') != '' else ''
+            s_val = f"{s.get('s'):.3f}" if s.get('s') is not None and s.get('s') != '' else ''
+            q_val = f"{s.get('quality'):.3f}" if s.get('quality') is not None and s.get('quality') != '' else 'N/A'
             sp_rows.append([
                 Paragraph(str(pid), styles['BodyText']),
-                Paragraph(str(s.get('P','')), styles['BodyText']),
-                Paragraph(str(s.get('T','')), styles['BodyText']),
-                Paragraph(str(s.get('h','')), styles['BodyText']),
-                Paragraph(str(s.get('s','')), styles['BodyText']),
-                Paragraph(str(s.get('quality','')), styles['BodyText'])
+                Paragraph(P_val, styles['BodyText']),
+                Paragraph(T_val, styles['BodyText']),
+                Paragraph(h_val, styles['BodyText']),
+                Paragraph(s_val, styles['BodyText']),
+                Paragraph(q_val, styles['BodyText'])
             ])
         t3 = Table(sp_rows, colWidths=[40, 90, 80, 110, 70, 80], hAlign='LEFT')
         t3.setStyle(TableStyle([
@@ -626,6 +631,36 @@ def generate_pdf_report(data, filepath):
             ('VALIGN', (0,0), (-1,-1), 'TOP')
         ]))
         elements.append(t3)
+        elements.append(Spacer(1, 12))
+
+    # Add charts to PDF if present
+    charts = data.get('charts', {})
+    import base64
+    import io
+
+    # P-h Diagram
+    if 'ph_diagram' in charts and charts['ph_diagram']:
+        try:
+            elements.append(Paragraph('P-h Diagram', styles['Heading2']))
+            img_data = charts['ph_diagram'].split('base64,')[-1]
+            img_bytes = base64.b64decode(img_data)
+            img = Image(io.BytesIO(img_bytes), width=400, height=250)
+            elements.append(img)
+            elements.append(Spacer(1, 12))
+        except Exception as e:
+            print(f"Error embedding P-h diagram: {e}")
+
+    # T-s Diagram
+    if 'ts_diagram' in charts and charts['ts_diagram']:
+        try:
+            elements.append(Paragraph('T-s Diagram', styles['Heading2']))
+            img_data = charts['ts_diagram'].split('base64,')[-1]
+            img_bytes = base64.b64decode(img_data)
+            img = Image(io.BytesIO(img_bytes), width=400, height=250)
+            elements.append(img)
+            elements.append(Spacer(1, 12))
+        except Exception as e:
+            print(f"Error embedding T-s diagram: {e}")
 
     doc.build(elements)
 

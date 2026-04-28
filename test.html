@@ -340,56 +340,69 @@
         .system-diagram {
             flex: 1;
             position: relative;
-            min-height: 400px;
+            min-height: 360px;
             background-color: #f9f9f9;
             border-radius: var(--border-radius);
             overflow: hidden;
             margin-bottom: 18px;
             border: 1px solid #e0e0e0;
+        }
+
+        .component {
+            position: absolute;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
+            text-align: center;
+            transition: var(--transition);
         }
 
-        .pipe-line {
-            fill: none;
-            stroke-width: 6;
-            stroke-linecap: round;
-        }
-        
-        .pipe-hot { stroke: #dc3545; }
-        .pipe-liquid { stroke: #fd7e14; }
-        .pipe-mixed { stroke: #17a2b8; }
-        .pipe-cold { stroke: #007bff; }
-
-        .svg-component-label {
-            font-size: 14px;
-            font-weight: bold;
-            fill: var(--dark-color);
-            text-anchor: middle;
-        }
-        
-        .svg-component-value {
-            font-size: 11px;
-            fill: var(--gray-color);
-            text-anchor: middle;
+        .component-icon {
+            width: 68px;
+            height: 68px;
+            background-color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.7rem;
+            color: var(--primary-color);
+            box-shadow: var(--box-shadow);
+            margin-bottom: 6px;
+            border: 3px solid var(--primary-color);
         }
 
-        .refrigerant-particle {
-            fill: #00bcd4;
-            stroke: none;
-            r: 5;
+        .component-label {
+            font-weight: 600;
+            background-color: rgba(255, 255, 255, 0.92);
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.82rem;
         }
 
-        @keyframes sim-spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
+        .component-value {
+            font-size: 0.75rem;
+            color: var(--gray-color);
+            margin-top: 3px;
+            max-width: 160px;
         }
 
-        .rotating {
-            animation: sim-spin 2s linear infinite;
-            transform-origin: center;
+        .flow-arrow {
+            position: absolute;
+            color: var(--accent-color);
+            font-size: 1.4rem;
+            animation: flow 2s linear infinite;
+        }
+
+        @keyframes flow {
+            0%   { opacity: 0.5; }
+            50%  { opacity: 1; }
+            100% { opacity: 0.5; }
+        }
+
+        .flow-arrow.paused {
             animation-play-state: paused;
+            opacity: 0.4;
         }
 
         .simulation-controls {
@@ -655,186 +668,6 @@
                 grid-template-columns: 1fr;
             }
         }
-
-        /* Simulation 2 Styles */
-        #simulation2 .sim2-wrapper {
-            background-color: #f0f2f5;
-            padding: 20px;
-            border-radius: 8px;
-        }
-
-        #simulation2 .sim2-header {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        #simulation2 .sim2-header h1 {
-            color: #007bff;
-            margin-bottom: 5px;
-            font-size: 1.8rem;
-        }
-
-        #simulation2 .sim2-subtitle {
-            color: #6c757d;
-            font-size: 1.1em;
-        }
-
-        #simulation2 .sim2-main {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 20px;
-            width: 100%;
-        }
-
-        #simulation2 .sim2-panel {
-            background-color: #ffffff;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            padding: 20px;
-        }
-
-        #simulation2 #simulation-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        #simulation2 #simulation-controls {
-            margin-bottom: 20px;
-        }
-
-        #simulation2 #simulation-controls button {
-            padding: 10px 20px;
-            font-size: 16px;
-            font-weight: bold;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            margin: 0 10px;
-            transition: background-color 0.3s, transform 0.1s;
-        }
-
-        #simulation2 #simulation-controls button:active {
-            transform: scale(0.98);
-        }
-
-        #simulation2 #start-btn {
-            background-color: #28a745;
-            color: white;
-        }
-
-        #simulation2 #start-btn:hover:not(:disabled) {
-            background-color: #218838;
-        }
-
-        #simulation2 #stop-btn {
-            background-color: #dc3545;
-            color: white;
-        }
-
-        #simulation2 #stop-btn:hover:not(:disabled) {
-            background-color: #c82333;
-        }
-
-        #simulation2 #simulation-controls button:disabled {
-            background-color: #ccc;
-            cursor: not-allowed;
-        }
-
-        #simulation2 #controls-container h2, #simulation2 #info-container h2 {
-            margin-top: 0;
-            border-bottom: 2px solid #dee2e6;
-            padding-bottom: 10px;
-            margin-bottom: 20px;
-            color: #212529;
-        }
-
-        #simulation2 .control-group {
-            margin-bottom: 20px;
-        }
-
-        #simulation2 .control-group label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-            color: #212529;
-        }
-
-        #simulation2 .control-group input[type="range"] {
-            width: 100%;
-            cursor: pointer;
-        }
-
-        #simulation2 .control-value {
-            float: right;
-            font-weight: normal;
-            color: #6c757d;
-        }
-
-        #simulation2 .state-point {
-            background-color: #f0f2f5;
-            border-left: 4px solid #007bff;
-            padding: 15px;
-            margin-bottom: 15px;
-            border-radius: 4px;
-        }
-
-        #simulation2 .state-point h3 {
-            margin-top: 0;
-            color: #212529;
-        }
-
-        #simulation2 .state-point p {
-            margin: 5px 0;
-            font-size: 0.9em;
-            color: #212529;
-        }
-
-        #simulation2 .state-point span {
-            font-weight: bold;
-            float: right;
-        }
-
-        @keyframes sim2-spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-
-        #simulation2 .rotating {
-            animation: sim2-spin 2s linear infinite;
-            transform-origin: center;
-            animation-play-state: paused;
-        }
-
-        #simulation2 .refrigerant-particle {
-            fill: #007bff;
-            r: 4;
-        }
-
-        #simulation2 .pipe {
-            fill: none;
-            stroke-width: 8;
-            stroke-linecap: round;
-        }
-
-        #simulation2 .component-label {
-            font-size: 14px;
-            font-weight: bold;
-            fill: #212529;
-            text-anchor: middle;
-        }
-
-        #simulation2 .sim2-aside {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        @media (max-width: 992px) {
-            #simulation2 .sim2-main {
-                grid-template-columns: 1fr;
-            }
-        }
     </style>
 </head>
 <body>
@@ -855,7 +688,6 @@
                 <li><a href="#simulation" class="nav-link">Simulation</a></li>
                 <li><a href="#experiments" class="nav-link">Experiments</a></li>
                 <li><a href="#results" class="nav-link">Results</a></li>
-                <!-- <li><a href="#simulation2" class="nav-link">Simulation 2</a></li> -->
                 <li><a href="#about" class="nav-link">About</a></li>
             </ul>
         </nav>
@@ -1013,10 +845,8 @@
                     </div>
                     <div class="model-selector">
                         <button class="model-btn active" data-model="single-stage">Single-Stage</button>
-                        <!--
                         <button class="model-btn" data-model="two-stage">Two-Stage</button>
                         <button class="model-btn" data-model="comparison">Refrigerant Comparison</button>
-                        -->
                     </div>
                 </div>
 
@@ -1074,114 +904,7 @@
             <!-- Visual -->
             <div class="simulation-visual">
                 <div class="system-diagram" id="systemDiagram">
-                    <svg id="refrigeration-svg" width="100%" height="450" viewBox="0 0 800 450" preserveAspectRatio="xMidYMid meet">
-                        <defs>
-                            <!-- Paths for animation -->
-                            <path id="path-1-2" d="M 600 350 L 600 100" />
-                            <path id="path-2-3" d="M 600 100 L 200 100" />
-                            <path id="path-3-4" d="M 200 100 L 200 350" />
-                            <path id="path-4-1" d="M 200 350 L 600 350" />
-                            
-                            <!-- Gradients for realistic look -->
-                            <linearGradient id="grad-cond" x1="0%" y1="0%" x2="100%" y2="0%">
-                                <stop offset="0%" style="stop-color:#ff9999;stop-opacity:1" />
-                                <stop offset="100%" style="stop-color:#dc3545;stop-opacity:1" />
-                            </linearGradient>
-                            <linearGradient id="grad-evap" x1="0%" y1="0%" x2="100%" y2="0%">
-                                <stop offset="0%" style="stop-color:#99ccff;stop-opacity:1" />
-                                <stop offset="100%" style="stop-color:#007bff;stop-opacity:1" />
-                            </linearGradient>
-                        </defs>
-
-                        <!-- Base Pipes -->
-                        <path id="pipe-4-1" class="pipe-line pipe-mixed" d="M 200 350 L 600 350" />
-                        <path id="pipe-1-2" class="pipe-line pipe-cold" d="M 600 350 L 600 100" />
-                        <path id="pipe-2-3" class="pipe-line pipe-hot" d="M 600 100 L 200 100" />
-                        <path id="pipe-3-4" class="pipe-line pipe-liquid" d="M 200 100 L 200 350" />
-                        
-                        <!-- Flow Particles grouped here so they are under the components -->
-                        <g id="particles-group"></g>
-                        
-                        <!-- Heat Exchange Arrows (Condenser) -->
-                        <g transform="translate(400, 40)">
-                            <path d="M -20 0 L -20 -20 L -25 -15 M -20 -20 L -15 -15" stroke="#dc3545" fill="none" stroke-width="2"/>
-                            <path d="M 0 0 L 0 -20 L -5 -15 M 0 -20 L 5 -15" stroke="#dc3545" fill="none" stroke-width="2"/>
-                            <path d="M 20 0 L 20 -20 L 15 -15 M 20 -20 L 25 -15" stroke="#dc3545" fill="none" stroke-width="2"/>
-                            <text x="0" y="-30" font-size="12" fill="#dc3545" text-anchor="middle" font-weight="bold">Q out</text>
-                        </g>
-
-                        <!-- Heat Exchange Arrows (Evaporator) -->
-                        <g transform="translate(400, 410)">
-                            <path d="M -20 20 L -20 0 L -25 5 M -20 0 L -15 5" stroke="#007bff" fill="none" stroke-width="2"/>
-                            <path d="M 0 20 L 0 0 L -5 5 M 0 0 L 5 5" stroke="#007bff" fill="none" stroke-width="2"/>
-                            <path d="M 20 20 L 20 0 L 15 5 M 20 0 L 25 5" stroke="#007bff" fill="none" stroke-width="2"/>
-                            <text x="0" y="35" font-size="12" fill="#007bff" text-anchor="middle" font-weight="bold">Q in</text>
-                        </g>
-
-                        <!-- Condenser Component -->
-                        <g transform="translate(400, 100)">
-                            <!-- Coil representation -->
-                            <rect x="-120" y="-30" width="240" height="60" rx="8" fill="url(#grad-cond)" stroke="#dc3545" stroke-width="3" opacity="0.3"/>
-                            <path d="M -110,-15 Q -80,-40 -50,-15 T 10,-15 T 70,-15 T 110,-15 M -110,15 Q -80,40 -50,15 T 10,15 T 70,15 T 110,15" fill="none" stroke="#dc3545" stroke-width="4"/>
-                            
-                            <!-- Bounding box for label -->
-                            <rect x="-65" y="45" width="130" height="55" rx="4" fill="rgba(255,255,255,0.9)" stroke="#dee2e6"/>
-                            <text y="60" class="svg-component-label">Condenser</text>
-                            <text y="75" class="svg-component-value" id="svg-cond-info">In: -, Out: -</text>
-                        </g>
-
-                        <!-- Compressor Component -->
-                        <g transform="translate(600, 225)">
-                            <circle cx="0" cy="0" r="45" fill="#f8f9fa" stroke="#343a40" stroke-width="3"/>
-                            <polygon points="-20,20 20,20 0,-25" fill="#e9ecef" stroke="#343a40" stroke-width="2"/>
-                            <path d="M -15,-5 L 15,-5 M-10,5 L 10,5 M-5,15 L 5,15" stroke="#6c757d" stroke-width="2"/>
-                            
-                            <!-- Bounding box for label -->
-                            <rect x="-165" y="-20" width="130" height="55" rx="4" fill="rgba(255,255,255,0.9)" stroke="#dee2e6"/>
-                            <text x="-100" y="-5" class="svg-component-label">Compressor</text>
-                            <text x="-100" y="10" class="svg-component-value" id="svg-comp-info">In: -, Out: -</text>
-                        </g>
-
-                        <!-- Evaporator Component -->
-                        <g transform="translate(400, 350)">
-                            <!-- Coil representation -->
-                            <rect x="-120" y="-30" width="240" height="60" rx="8" fill="url(#grad-evap)" stroke="#007bff" stroke-width="3" opacity="0.3"/>
-                            <path d="M -110,-15 Q -80,-40 -50,-15 T 10,-15 T 70,-15 T 110,-15 M -110,15 Q -80,40 -50,15 T 10,15 T 70,15 T 110,15" fill="none" stroke="#007bff" stroke-width="4"/>
-                            
-                            <!-- Bounding box for label -->
-                            <rect x="-70" y="-85" width="140" height="55" rx="4" fill="rgba(255,255,255,0.9)" stroke="#dee2e6"/>
-                            <text y="-70" class="svg-component-label">Evaporator</text>
-                            <text y="-55" class="svg-component-value" id="svg-evap-info">In: -, Out: -</text>
-                        </g>
-
-                        <!-- Expansion Valve Component -->
-                        <g transform="translate(200, 225)">
-                            <g transform="rotate(90)">
-                                <!-- Bowtie standard logic symbol for valve -->
-                                <polygon points="-25,-20 25,20 -25,20 25,-20" fill="#f8f9fa" stroke="#343a40" stroke-width="3"/>
-                                <line x1="0" y1="-20" x2="0" y2="20" stroke="#343a40" stroke-width="2"/>
-                                <circle cx="0" cy="0" r="8" fill="#343a40"/>
-                            </g>
-                            
-                            <!-- Bounding box for label -->
-                            <rect x="35" y="-20" width="130" height="55" rx="4" fill="rgba(255,255,255,0.9)" stroke="#dee2e6"/>
-                            <text x="100" y="-5" class="svg-component-label">Exp. Valve</text>
-                            <text x="100" y="10" class="svg-component-value" id="svg-exp-info">In: -, Out: -</text>
-                        </g>
-
-                        <!-- State Point Nodes -->
-                        <circle cx="600" cy="350" r="14" fill="#6c757d" stroke="white" stroke-width="2"/>
-                        <text x="600" y="355" font-size="14px" font-weight="bold" fill="white" text-anchor="middle">1</text>
-                        
-                        <circle cx="600" cy="100" r="14" fill="#6c757d" stroke="white" stroke-width="2"/>
-                        <text x="600" y="105" font-size="14px" font-weight="bold" fill="white" text-anchor="middle">2</text>
-                        
-                        <circle cx="200" cy="100" r="14" fill="#6c757d" stroke="white" stroke-width="2"/>
-                        <text x="200" y="105" font-size="14px" font-weight="bold" fill="white" text-anchor="middle">3</text>
-                        
-                        <circle cx="200" cy="350" r="14" fill="#6c757d" stroke="white" stroke-width="2"/>
-                        <text x="200" y="355" font-size="14px" font-weight="bold" fill="white" text-anchor="middle">4</text>
-                    </svg>
+                    <!-- Will be built by JS -->
                 </div>
                 <div class="simulation-controls">
                     <button id="start-btn" class="btn btn-primary">
@@ -1254,142 +977,6 @@
         </div>
     </section>
 
-    <!-- <!-- Simulation 2 -->
-    <section id="simulation2" class="page">
-        <div class="sim2-wrapper">
-            <div class="sim2-header">
-                <h1>Vapor-Compression Refrigeration System Simulator</h1>
-                <p class="sim2-subtitle">An interactive look at the thermodynamic cycle</p>
-            </div>
-
-            <div class="sim2-main">
-                <section id="simulation-container" class="sim2-panel">
-                    <div id="simulation-controls">
-                        <button id="start-btn">Start</button>
-                        <button id="stop-btn" disabled>Stop</button>
-                    </div>
-                    <svg id="refrigeration-svg" width="100%" height="500" viewBox="0 0 800 500">
-                        <!-- Define paths for particles to follow -->
-                        <defs>
-                            <path id="flow-path-1-2" d="M 200 400 L 200 200" />
-                            <path id="flow-path-2-3" d="M 200 200 L 600 200" />
-                            <path id="flow-path-3-4" d="M 600 200 L 600 400" />
-                            <path id="flow-path-4-1" d="M 600 400 L 200 400" />
-                        </defs>
-
-                        <!-- Pipes -->
-                        <path id="pipe-1-2" class="pipe" d="M 200 400 L 200 200" stroke="#007bff" />
-                        <path id="pipe-2-3" class="pipe" d="M 200 200 L 600 200" stroke="#dc3545" />
-                        <path id="pipe-3-4" class="pipe" d="M 600 200 L 600 400" stroke="#fd7e14" />
-                        <path id="pipe-4-1" class="pipe" d="M 600 400 L 200 400" stroke="#007bff" />
-                        
-                        <!-- Components -->
-                        <!-- Compressor -->
-                        <g id="compressor" transform="translate(200, 300)">
-                            <circle cx="0" cy="0" r="40" fill="#6c757d" stroke="#343a40" stroke-width="2"/>
-                            <path d="M -15,-15 L 15,0 L -15,15 Z" fill="white" class="rotating"/>
-                            <text y="60" class="component-label">Compressor</text>
-                        </g>
-
-                        <!-- Condenser -->
-                        <g id="condenser" transform="translate(400, 150)">
-                            <rect x="-100" y="-20" width="200" height="40" rx="5" fill="#6c757d" stroke="#343a40" stroke-width="2"/>
-                            <line x1="-80" y1="-10" x2="-80" y2="10" stroke="white" stroke-width="3"/>
-                            <line x1="-40" y1="-10" x2="-40" y2="10" stroke="white" stroke-width="3"/>
-                            <line x1="0" y1="-10" x2="0" y2="10" stroke="white" stroke-width="3"/>
-                            <line x1="40" y1="-10" x2="40" y2="10" stroke="white" stroke-width="3"/>
-                            <line x1="80" y1="-10" x2="80" y2="10" stroke="white" stroke-width="3"/>
-                            <text y="40" class="component-label">Condenser</text>
-                        </g>
-                        
-                        <!-- Expansion Valve -->
-                        <g id="expansion-valve" transform="translate(600, 300)">
-                            <path d="M -20,-15 L 20,0 L -20,15 Z" fill="#6c757d" stroke="#343a40" stroke-width="2"/>
-                            <text y="40" class="component-label">Expansion Valve</text>
-                        </g>
-
-                        <!-- Evaporator -->
-                        <g id="evaporator" transform="translate(400, 450)">
-                            <rect x="-100" y="-20" width="200" height="40" rx="5" fill="#6c757d" stroke="#343a40" stroke-width="2"/>
-                            <line x1="-80" y1="-10" x2="-80" y2="10" stroke="white" stroke-width="3"/>
-                            <line x1="-40" y1="-10" x2="-40" y2="10" stroke="white" stroke-width="3"/>
-                            <line x1="0" y1="-10" x2="0" y2="10" stroke="white" stroke-width="3"/>
-                            <line x1="40" y1="-10" x2="40" y2="10" stroke="white" stroke-width="3"/>
-                            <line x1="80" y1="-10" x2="80" y2="10" stroke="white" stroke-width="3"/>
-                            <text y="40" class="component-label">Evaporator</text>
-                        </g>
-
-                        <!-- State Point Labels -->
-                        <text x="170" y="420" font-size="20px" font-weight="bold" fill="black">1</text>
-                        <text x="170" y="180" font-size="20px" font-weight="bold" fill="black">2</text>
-                        <text x="630" y="180" font-size="20px" font-weight="bold" fill="black">3</text>
-                        <text x="630" y="420" font-size="20px" font-weight="bold" fill="black">4</text>
-                    </svg>
-                </section>
-
-                <aside class="sim2-aside">
-                    <section id="controls-container" class="sim2-panel">
-                        <h2>Compressor</h2>
-                        <div class="state-point">
-                            <h3>Function</h3>
-                            <p>Compresses the low-pressure refrigerant vapor from the evaporator to high pressure, raising its temperature significantly.</p>
-                            <h3>Key Parameters</h3>
-                            <p><strong>Inlet Pressure:</strong> <span id="comp-inlet-p">2.5 bar</span></p>
-                            <p><strong>Inlet Temperature:</strong> <span id="comp-inlet-t">-5°C</span></p>
-                            <p><strong>Outlet Pressure:</strong> <span id="comp-outlet-p">10.0 bar</span></p>
-                            <p><strong>Outlet Temperature:</strong> <span id="comp-outlet-t">75°C</span></p>
-                            <p><strong>Compression Ratio:</strong> <span id="comp-ratio">4.0</span></p>
-                        </div>
-                    </section>
-
-                    <section id="info-container" class="sim2-panel">
-                        <h2>Condenser</h2>
-                        <div class="state-point">
-                            <h3>Function</h3>
-                            <p>Rejects heat from the high-pressure refrigerant vapor to the surroundings, condensing it into liquid form.</p>
-                            <h3>Key Parameters</h3>
-                            <p><strong>Inlet Pressure:</strong> <span id="cond-inlet-p">10.0 bar</span></p>
-                            <p><strong>Inlet Temperature:</strong> <span id="cond-inlet-t">75°C</span></p>
-                            <p><strong>Outlet Pressure:</strong> <span id="cond-outlet-p">10.0 bar</span></p>
-                            <p><strong>Outlet Temperature:</strong> <span id="cond-outlet-t">35°C</span></p>
-                            <p><strong>Heat Rejected:</strong> <span id="cond-heat-rejected">-</span> kW</p>
-                        </div>
-                    </section>
-                </aside>
-
-                <aside class="sim2-aside">
-                    <section id="controls-container" class="sim2-panel">
-                        <h2>Expansion Valve</h2>
-                        <div class="state-point">
-                            <h3>Function</h3>
-                            <p>Reduces the pressure of the liquid refrigerant through an isenthalpic process, creating a cold mixture for the evaporator.</p>
-                            <h3>Key Parameters</h3>
-                            <p><strong>Inlet Pressure:</strong> <span id="exp-inlet-p">10.0 bar</span></p>
-                            <p><strong>Inlet Temperature:</strong> <span id="exp-inlet-t">35°C</span></p>
-                            <p><strong>Outlet Pressure:</strong> <span id="exp-outlet-p">2.5 bar</span></p>
-                            <p><strong>Outlet Temperature:</strong> <span id="exp-outlet-t">-5°C</span></p>
-                            <p><strong>Pressure Drop:</strong> <span id="exp-pressure-drop">7.5 bar</span></p>
-                        </div>
-                    </section>
-
-                    <section id="info-container" class="sim2-panel">
-                        <h2>Evaporator</h2>
-                        <div class="state-point">
-                            <h3>Function</h3>
-                            <p>Absorbs heat from the refrigerated space, vaporizing the cold liquid-vapor mixture and returning it as low-pressure vapor.</p>
-                            <h3>Key Parameters</h3>
-                            <p><strong>Inlet Pressure:</strong> <span id="evap-inlet-p">2.5 bar</span></p>
-                            <p><strong>Inlet Temperature:</strong> <span id="evap-inlet-t">-5°C</span></p>
-                            <p><strong>Outlet Pressure:</strong> <span id="evap-outlet-p">2.5 bar</span></p>
-                            <p><strong>Outlet Temperature:</strong> <span id="evap-outlet-t">-5°C</span></p>
-                            <p><strong>Cooling Capacity:</strong> <span id="evap-cooling-cap">-</span> kW</p>
-                        </div>
-                    </section>
-                </aside>
-            </div>
-        </div>
-    </section>
--->
     <!-- Experiments -->
     <section id="experiments" class="page">
         <h2 class="page-title">Pre-Defined Experiments</h2>
@@ -1420,7 +1007,6 @@
                 <p>Study how superheating degree impacts efficiency and compressor work.</p>
                 <button class="btn start-experiment" data-exp="4">View Details</button>
             </div>
-            <!--
             <div class="experiment-card">
                 <h3><i class="fas fa-compress-arrows-alt"></i> Experiment 5</h3>
                 <p><strong>Two-Stage vs Single-Stage Performance</strong></p>
@@ -1433,7 +1019,6 @@
                 <p>Investigate how subcooling increases refrigeration effect and COP.</p>
                 <button class="btn start-experiment" data-exp="6">View Details</button>
             </div>
-            -->
         </div>
 
         <div id="experiment-details" class="content-card" style="display:none;">
@@ -1514,7 +1099,7 @@
             </ol>
 
             <h3>Under the Guidance of</h3>
-            <p><strong>Prof. Ghanashyam Chendke</strong></p>
+            <p><strong>Prof. Mr Ghanashyam Chendke</strong></p>
         </div>
     </section>
 </main>
@@ -1641,34 +1226,36 @@
 
     // ===== System diagram =====
     function initSystemDiagram() {
-        const svg = document.getElementById('refrigeration-svg');
-        const group = document.getElementById('particles-group');
-        if (!svg || !group) return;
+        const diagram = document.getElementById('systemDiagram');
+        if (!diagram) return;
 
-        const paths = ['path-1-2', 'path-2-3', 'path-3-4', 'path-4-1'];
-        const numParticles = 5;
+        diagram.innerHTML = `
+            <div class="component" id="comp" style="top:40%;left:10%;">
+                <div class="component-icon"><i class="fas fa-compress"></i></div>
+                <div class="component-label">Compressor</div>
+                <div class="component-value" id="comp-info">In: -, Out: -</div>
+            </div>
+            <div class="component" id="cond" style="top:10%;left:55%;">
+                <div class="component-icon"><i class="fas fa-water"></i></div>
+                <div class="component-label">Condenser</div>
+                <div class="component-value" id="cond-info">In: -, Out: -</div>
+            </div>
+            <div class="component" id="exp" style="top:40%;left:85%;">
+                <div class="component-icon"><i class="fas fa-expand-arrows-alt"></i></div>
+                <div class="component-label">Expansion Valve</div>
+                <div class="component-value" id="exp-info">In: -, Out: -</div>
+            </div>
+            <div class="component" id="evap" style="top:75%;left:55%;">
+                <div class="component-icon"><i class="fas fa-snowflake"></i></div>
+                <div class="component-label">Evaporator</div>
+                <div class="component-value" id="evap-info">In: -, Out: -</div>
+            </div>
 
-        paths.forEach(pathId => {
-            for (let i = 0; i < numParticles; i++) {
-                const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-                circle.classList.add('refrigerant-particle');
-
-                const animateMotion = document.createElementNS('http://www.w3.org/2000/svg', 'animateMotion');
-                animateMotion.setAttribute('dur', '4s');
-                animateMotion.setAttribute('repeatCount', 'indefinite');
-                animateMotion.setAttribute('begin', `${i * (4 / numParticles)}s`);
-
-                const mpath = document.createElementNS('http://www.w3.org/2000/svg', 'mpath');
-                mpath.setAttributeNS('http://www.w3.org/1999/xlink', 'href', `#${pathId}`);
-
-                animateMotion.appendChild(mpath);
-                circle.appendChild(animateMotion);
-                group.appendChild(circle);
-            }
-        });
-        
-        // Pause animations by default
-        svg.pauseAnimations();
+            <div class="flow-arrow" id="arrow-12" style="top:35%;left:24%;">➜</div>
+            <div class="flow-arrow" id="arrow-23" style="top:22%;left:66%;transform:rotate(90deg);">➜</div>
+            <div class="flow-arrow" id="arrow-34" style="top:55%;left:78%;transform:rotate(180deg);">➜</div>
+            <div class="flow-arrow" id="arrow-41" style="top:65%;left:32%;transform:rotate(270deg);">➜</div>
+        `;
     }
 
     function updateSystemDiagramFromResults(state) {
@@ -1676,29 +1263,19 @@
         const s1 = state['1'], s2 = state['2'], s3 = state['3'], s4 = state['4'];
         if (!s1 || !s2 || !s3 || !s4) return;
 
-        const compInfo = document.getElementById('svg-comp-info');
-        const condInfo = document.getElementById('svg-cond-info');
-        const expInfo  = document.getElementById('svg-exp-info');
-        const evapInfo = document.getElementById('svg-evap-info');
+        const compInfo = document.getElementById('comp-info');
+        const condInfo = document.getElementById('cond-info');
+        const expInfo  = document.getElementById('exp-info');
+        const evapInfo = document.getElementById('evap-info');
 
-        const setMultiLine = (el, line1, line2) => {
-            if (!el) return;
-            const x = el.getAttribute('x') || "0";
-            el.innerHTML = `<tspan x="${x}">${line1}</tspan><tspan x="${x}" dy="1.4em">${line2}</tspan>`;
-        };
-
-        setMultiLine(compInfo, 
-            `In: ${formatNum(s1.T,1)}°C / ${formatNum(s1.P,0)}kPa`, 
-            `Out: ${formatNum(s2.T,1)}°C / ${formatNum(s2.P,0)}kPa`);
-        setMultiLine(condInfo,
-            `In: ${formatNum(s2.T,1)}°C / ${formatNum(s2.P,0)}kPa`,
-            `Out: ${formatNum(s3.T,1)}°C / ${formatNum(s3.P,0)}kPa`);
-        setMultiLine(expInfo,
-            `In: ${formatNum(s3.T,1)}°C / ${formatNum(s3.P,0)}kPa`,
-            `Out: ${formatNum(s4.T,1)}°C / ${formatNum(s4.P,0)}kPa`);
-        setMultiLine(evapInfo,
-            `In: ${formatNum(s4.T,1)}°C / ${formatNum(s4.P,0)}kPa`,
-            `Out: ${formatNum(s1.T,1)}°C / ${formatNum(s1.P,0)}kPa`);
+        if (compInfo) compInfo.innerHTML =
+            `In: ${formatNum(s1.T,1)}°C / ${formatNum(s1.P,0)}kPa<br>Out: ${formatNum(s2.T,1)}°C / ${formatNum(s2.P,0)}kPa`;
+        if (condInfo) condInfo.innerHTML =
+            `In: ${formatNum(s2.T,1)}°C / ${formatNum(s2.P,0)}kPa<br>Out: ${formatNum(s3.T,1)}°C / ${formatNum(s3.P,0)}kPa`;
+        if (expInfo) expInfo.innerHTML =
+            `In: ${formatNum(s3.T,1)}°C / ${formatNum(s3.P,0)}kPa<br>Out: ${formatNum(s4.T,1)}°C / ${formatNum(s4.P,0)}kPa`;
+        if (evapInfo) evapInfo.innerHTML =
+            `In: ${formatNum(s4.T,1)}°C / ${formatNum(s4.P,0)}kPa<br>Out: ${formatNum(s1.T,1)}°C / ${formatNum(s1.P,0)}kPa`;
     }
 
     // ===== Model selector =====
@@ -1825,11 +1402,6 @@
             updateSystemDiagramFromResults(currentResults.state_points);
             updateCharts(currentResults.state_points);
             updateMassFlowInput(currentResults.performance);
-
-            // Auto-start simulation animation
-            const svg = document.getElementById('refrigeration-svg');
-            if (svg) svg.unpauseAnimations();
-            document.querySelectorAll('.rotating').forEach(r => r.style.animationPlayState = 'running');
         } catch (e) {
             console.error('❌ Error calling /calculate:', e);
             console.error('Backend URL:', API_BASE);
@@ -2101,28 +1673,21 @@
         const pauseBtn = document.getElementById('pause-btn');
         const resetBtn = document.getElementById('reset-btn');
 
-        const rotators = () => document.querySelectorAll('.rotating');
-        const svg = document.getElementById('refrigeration-svg');
+        const arrows = () => document.querySelectorAll('.flow-arrow');
 
         if (startBtn) {
             startBtn.addEventListener('click', () => {
-                if (svg) svg.unpauseAnimations();
-                rotators().forEach(r => r.style.animationPlayState = 'running');
+                arrows().forEach(a => a.classList.remove('paused'));
             });
         }
         if (pauseBtn) {
             pauseBtn.addEventListener('click', () => {
-                if (svg) svg.pauseAnimations();
-                rotators().forEach(r => r.style.animationPlayState = 'paused');
+                arrows().forEach(a => a.classList.add('paused'));
             });
         }
         if (resetBtn) {
             resetBtn.addEventListener('click', () => {
-                if (svg) {
-                    svg.setCurrentTime(0);
-                    svg.pauseAnimations();
-                }
-                rotators().forEach(r => r.style.animationPlayState = 'paused');
+                arrows().forEach(a => a.classList.add('paused'));
                 if (currentResults) {
                     updateSystemDiagramFromResults(currentResults.state_points);
                 }
@@ -2320,195 +1885,6 @@
             alert('Could not load experiment details.');
         }
     }
-
-    // ===== Simulation 2: Interactive Refrigeration System =====
-    document.addEventListener('DOMContentLoaded', () => {
-        // Check if we're on the simulation2 page
-        if (!document.getElementById('simulation2')) return;
-
-        // DOM Element Selection
-        const startBtn = document.getElementById('start-btn');
-        const pauseBtn = document.getElementById('pause-btn');
-        const resetBtn = document.getElementById('reset-btn');
-
-        // Component Information Elements
-        const compInletP = document.getElementById('comp-inlet-p');
-        const compInletT = document.getElementById('comp-inlet-t');
-        const compOutletP = document.getElementById('comp-outlet-p');
-        const compOutletT = document.getElementById('comp-outlet-t');
-        const compRatio = document.getElementById('comp-ratio');
-
-        const condInletP = document.getElementById('cond-inlet-p');
-        const condInletT = document.getElementById('cond-inlet-t');
-        const condOutletP = document.getElementById('cond-outlet-p');
-        const condOutletT = document.getElementById('cond-outlet-t');
-        const condHeatRejected = document.getElementById('cond-heat-rejected');
-
-        const expInletP = document.getElementById('exp-inlet-p');
-        const expInletT = document.getElementById('exp-inlet-t');
-        const expOutletP = document.getElementById('exp-outlet-p');
-        const expOutletT = document.getElementById('exp-outlet-t');
-        const expPressureDrop = document.getElementById('exp-pressure-drop');
-
-        const evapInletP = document.getElementById('evap-inlet-p');
-        const evapInletT = document.getElementById('evap-inlet-t');
-        const evapOutletP = document.getElementById('evap-outlet-p');
-        const evapOutletT = document.getElementById('evap-outlet-t');
-        const evapCoolingCap = document.getElementById('evap-cooling-cap');
-
-        // SVG Pipe Elements
-        const pipe12 = document.getElementById('pipe-1-2');
-        const pipe23 = document.getElementById('pipe-2-3');
-        const pipe34 = document.getElementById('pipe-3-4');
-        const pipe41 = document.getElementById('pipe-4-1');
-
-        // State Management
-        const state = {
-            isRunning: false,
-            p1: 0, t1: 0,
-            p2: 0, t2: 0,
-            p3: 0, t3: 0,
-            p4: 0, t4: 0,
-        };
-
-        // Simulation Logic
-        function calculateSystemState() {
-            // Simplified model based on ambient and load conditions
-            // Point 1: Evaporator outlet (low pressure, low temp vapor)
-            state.p1 = 2.5;
-            state.t1 = -5.0;
-
-            // Point 2: Compressor outlet (high pressure, high temp vapor)
-            state.p2 = 10.0;
-            state.t2 = 75.0;
-
-            // Point 3: Condenser outlet (high pressure, medium temp liquid)
-            state.p3 = 10.0;
-            state.t3 = 35.0;
-
-            // Point 4: Expansion valve outlet (low pressure, low temp mix)
-            state.p4 = 2.5;
-            state.t4 = -5.0;
-        }
-
-        // View Update Functions
-        function interpolateColor(value, min, max, colorCold, colorHot) {
-            const ratio = (value - min) / (max - min);
-            const r = Math.round(parseInt(colorCold.slice(1, 3), 16) * (1 - ratio) + parseInt(colorHot.slice(1, 3), 16) * ratio);
-            const g = Math.round(parseInt(colorCold.slice(3, 5), 16) * (1 - ratio) + parseInt(colorHot.slice(3, 5), 16) * ratio);
-            const b = Math.round(parseInt(colorCold.slice(5, 7), 16) * (1 - ratio) + parseInt(colorHot.slice(5, 7), 16) * ratio);
-            return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
-        }
-
-        function updateDisplay() {
-            // Update Compressor information
-            compInletP.textContent = `${state.p1.toFixed(1)}`;
-            compInletT.textContent = `${state.t1.toFixed(1)}`;
-            compOutletP.textContent = `${state.p2.toFixed(1)}`;
-            compOutletT.textContent = `${state.t2.toFixed(1)}`;
-            compRatio.textContent = `${(state.p2 / state.p1).toFixed(2)}`;
-
-            // Update Condenser information
-            condInletP.textContent = `${state.p2.toFixed(1)}`;
-            condInletT.textContent = `${state.t2.toFixed(1)}`;
-            condOutletP.textContent = `${state.p3.toFixed(1)}`;
-            condOutletT.textContent = `${state.t3.toFixed(1)}`;
-            condHeatRejected.textContent = `${((state.t2 - state.t3) * 0.5).toFixed(1)}`;
-
-            // Update Expansion Valve information
-            expInletP.textContent = `${state.p3.toFixed(1)}`;
-            expInletT.textContent = `${state.t3.toFixed(1)}`;
-            expOutletP.textContent = `${state.p4.toFixed(1)}`;
-            expOutletT.textContent = `${state.t4.toFixed(1)}`;
-            expPressureDrop.textContent = `${(state.p3 - state.p4).toFixed(1)}`;
-
-            // Update Evaporator information
-            evapInletP.textContent = `${state.p4.toFixed(1)}`;
-            evapInletT.textContent = `${state.t4.toFixed(1)}`;
-            evapOutletP.textContent = `${state.p1.toFixed(1)}`;
-            evapOutletT.textContent = `${state.t1.toFixed(1)}`;
-            evapCoolingCap.textContent = `${((state.t1 - state.t4) * 0.5).toFixed(1)}`;
-
-            // Update pipe colors
-            const tempMin = -20, tempMax = 100;
-            pipe12.setAttribute('stroke', interpolateColor(state.t1, tempMin, tempMax, '#007bff', '#dc3545'));
-            pipe23.setAttribute('stroke', interpolateColor(state.t2, tempMin, tempMax, '#007bff', '#dc3545'));
-            pipe34.setAttribute('stroke', interpolateColor(state.t3, tempMin, tempMax, '#007bff', '#dc3545'));
-            pipe41.setAttribute('stroke', interpolateColor(state.t4, tempMin, tempMax, '#007bff', '#dc3545'));
-
-            const baseSpeed = 4;
-            const compressorIcon = document.querySelector('#compressor .rotating');
-            if (compressorIcon) {
-                compressorIcon.style.animationDuration = `2s`;
-            }
-        }
-
-        function updateAnimationState() {
-            const playState = state.isRunning ? 'running' : 'paused';
-            const compressorIcon = document.querySelector('#compressor .rotating');
-            if (compressorIcon) {
-                compressorIcon.style.animationPlayState = playState;
-            }
-        }
-
-        function createParticles() {
-            const svg = document.getElementById('refrigeration-svg');
-            const paths = ['path-1-2', 'path-2-3', 'path-3-4', 'path-4-1'];
-            const numParticles = 4;
-
-            paths.forEach(pathId => {
-                for (let i = 0; i < numParticles; i++) {
-                    const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-                    circle.classList.add('refrigerant-particle');
-
-                    const animateMotion = document.createElementNS('http://www.w3.org/2000/svg', 'animateMotion');
-                    animateMotion.setAttribute('dur', '3s');
-                    animateMotion.setAttribute('repeatCount', 'indefinite');
-                    animateMotion.setAttribute('begin', `${i * (3 / numParticles)}s`);
-
-                    const mpath = document.createElementNS('http://www.w3.org/2000/svg', 'mpath');
-                    mpath.setAttributeNS('http://www.w3.org/1999/xlink', 'href', `#${pathId}`);
-
-                    animateMotion.appendChild(mpath);
-                    circle.appendChild(animateMotion);
-                    svg.appendChild(circle);
-                }
-            });
-        }
-
-        if (startBtn) {
-            startBtn.addEventListener('click', () => {
-                state.isRunning = true;
-                startBtn.disabled = true;
-                if (pauseBtn) pauseBtn.disabled = false;
-                updateAnimationState();
-            });
-        }
-
-        if (pauseBtn) {
-            pauseBtn.addEventListener('click', () => {
-                state.isRunning = false;
-                if (startBtn) startBtn.disabled = false;
-                pauseBtn.disabled = true;
-                updateAnimationState();
-            });
-        }
-
-        if (resetBtn) {
-            resetBtn.addEventListener('click', () => {
-                state.isRunning = false;
-                if (startBtn) startBtn.disabled = false;
-                if (pauseBtn) pauseBtn.disabled = true;
-                updateAnimationState();
-            });
-        }
-
-        // Initial Setup
-        createParticles();
-        calculateSystemState();
-        updateDisplay();
-        updateAnimationState();
-    });
 </script>
 </body>
 </html>
