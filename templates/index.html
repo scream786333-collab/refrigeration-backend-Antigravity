@@ -1497,8 +1497,8 @@
 
             <h3>Usage</h3>
             <ol>
-                <li>Start the Flask backend (default: <code>http://localhost:5000</code>).</li>
-                <li>Open this <code>index.html</code> file in a browser.</li>
+                <li>Start the Flask backend if running locally.</li>
+                <li>Open this <code>index.html</code> file in a browser from the same origin.</li>
                 <li>Go to the Simulation tab, adjust inputs, and click "Calculate Cycle".</li>
                 <li>View state points, performance metrics, and diagrams.</li>
                 <li>Use the Results tab or buttons in the Simulation tab to export your data.</li>
@@ -1551,7 +1551,7 @@
 
 <script>
     // ===== Configuration =====
-    const API_BASE = 'http://localhost:5000';  // Change if backend runs elsewhere
+    const API_BASE = window.location.origin;  // Use same origin for backend in deployment
 
     let currentResults = null;   // last /calculate results.results
     let currentCharts = null;    // last /calculate charts
@@ -1771,9 +1771,7 @@
             });
             
             alert('⚠️  Could not connect to backend at ' + API_BASE + 
-                  '\n\nPlease start the Flask backend:\n1. Open Command Prompt\n2. Navigate to: ' + 
-                  API_BASE.replace('http://localhost:5000', 'refrigeration-backend folder') + 
-                  '\n3. Run: python app.py\n\nUsing fallback refrigerants for now.');
+                  '\n\nPlease ensure the backend is available from this origin.\nIf running locally, start Flask with: python app.py');
         }
     }
 
@@ -1838,15 +1836,12 @@
             let errorMsg = 'Failed to contact backend.\n\n';
             
             if (e.message.includes('Failed to fetch')) {
-                errorMsg += '🔴 Connection refused - Backend is not running\n\n';
-                errorMsg += 'To start the backend:\n';
-                errorMsg += '1. Open Command Prompt\n';
-                errorMsg += '2. cd refrigeration-backend\n';
-                errorMsg += '3. python app.py\n\n';
-                errorMsg += 'The server should run at http://localhost:5000';
+                errorMsg += '🔴 Connection refused - Backend is not reachable from this origin.\n\n';
+                errorMsg += 'If running locally, start the backend with: python app.py\n';
+                errorMsg += 'Then open the app from the same URL origin.\n';
             } else {
                 errorMsg += 'Error: ' + e.message + '\n\n';
-                errorMsg += 'Ensure Flask backend is running at: ' + API_BASE;
+                errorMsg += 'Ensure the backend is available at: ' + API_BASE;
             }
             
             alert(errorMsg);
