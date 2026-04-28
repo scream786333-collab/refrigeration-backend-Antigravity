@@ -1,9 +1,9 @@
 {
-  "version": 3,
-  "rewrites": [
+  "version": 2,
+  "routes": [
     {
-      "source": "/(.*)",
-      "destination": "/api/app.py"
+      "src": "/(.*)",
+      "dest": "/api/app.py"
     }
   ]
 }
